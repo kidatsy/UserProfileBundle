@@ -1,6 +1,6 @@
 <?php
 
-namespace CrisisTextLine\UserProfileBundle\Model\Repository;
+namespace CrisisTextLine\UserProfileBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
 

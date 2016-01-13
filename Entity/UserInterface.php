@@ -1,11 +1,11 @@
 <?php
 
-namespace CrisisTextLine\UserProfileBundle\Model;
+namespace CrisisTextLine\UserProfileBundle\Entity;
 
-use FOS\UserBundle\Model\UserInterface as BaseUserInterface;
-use CrisisTextLine\UserProfileBundle\Model\UserProfileInterface
+use FOS\UserBundle\Model\UserInterface as BaseFOSUserInterface;
+use CrisisTextLine\UserProfileBundle\Entity\UserProfileInterface;
 
-interface UserInterface extends BaseUserInterface
+interface UserInterface extends BaseFOSUserInterface
 {
     /**
      * Get the user's User Profile

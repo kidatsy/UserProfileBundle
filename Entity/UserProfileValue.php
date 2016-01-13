@@ -1,16 +1,17 @@
 <?php
 
-namespace CrisisTextLine\UserProfileBundle\Model;
+namespace CrisisTextLine\UserProfileBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-use CrisisTextLine\UserProfileBundle\Model\UserProfileInterface;
-use CrisisTextLine\UserProfileBundle\Model\UserProfileFieldInterface;
+use CrisisTextLine\UserProfileBundle\Entity\UserProfile;
+use CrisisTextLine\UserProfileBundle\Entity\UserProfileField;
 
 /**
- * @ORM\MappedSuperclass
+ * @ORM\Entity(repositoryClass="CrisisTextLine\UserProfileBundle\Entity\Repository\UserProfileValueRepository")
+ * @ORM\Table(name="user_profile_value")
  */
-class UserProfileValue implements UserProfileValueInterface
+class UserProfileValue
 {
     /**
      * @var integer
@@ -25,7 +26,7 @@ class UserProfileValue implements UserProfileValueInterface
      * @var integer
      *
      * @ORM\Column(name="user_profile_id", type="integer")
-     * @ORM\ManyToOne(targetEntity="\CrisisTextLine\UserProfileBundle\Model\UserProfile", inversedBy="values")
+     * @ORM\ManyToOne(targetEntity="\CrisisTextLine\UserProfileBundle\Entity\UserProfile", inversedBy="values")
      */
     protected $userProfile;
 
@@ -33,7 +34,7 @@ class UserProfileValue implements UserProfileValueInterface
      * @var integer
      *
      * @ORM\Column(name="user_profile_field_id", type="integer")
-     * @ORM\ManyToOne(targetEntity="\CrisisTextLine\UserProfileBundle\Model\UserProfileField", inversedBy="values")
+     * @ORM\ManyToOne(targetEntity="\CrisisTextLine\UserProfileBundle\Entity\UserProfileField", inversedBy="values")
      */
     protected $userProfileField;
 
@@ -68,7 +69,7 @@ class UserProfileValue implements UserProfileValueInterface
      * @param integer $userProfile
      * @return UserProfileValue
      */
-    public function setUserProfile(UserProfileInterface $userProfile)
+    public function setUserProfile(UserProfile $userProfile)
     {
         $this->userProfile = $userProfile;
 
@@ -91,7 +92,7 @@ class UserProfileValue implements UserProfileValueInterface
      * @param integer $userProfileField
      * @return UserProfileValue
      */
-    public function setUserProfileField(UserProfileFieldInterface $userProfileField)
+    public function setUserProfileField(UserProfileField $userProfileField)
     {
         $this->userProfileField = $userProfileField;
 

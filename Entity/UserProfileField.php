@@ -1,14 +1,15 @@
 <?php
 
-namespace CrisisTextLine\UserProfileBundle\Model;
+namespace CrisisTextLine\UserProfileBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use CrisisTextLine\UserProfileBundle\Model\UserProfileValue;
+use CrisisTextLine\UserProfileBundle\Entity\UserProfileValue;
 
 /**
- * @ORM\MappedSuperclass
+ * @ORM\Entity(repositoryClass="CrisisTextLine\UserProfileBundle\Entity\Repository\UserProfileFieldRepository")
+ * @ORM\Table(name="user_profile_field")
  */
-class UserProfileField implements UserProfileFieldInterface
+class UserProfileField
 {
     /**
      * @var integer
@@ -48,7 +49,7 @@ class UserProfileField implements UserProfileFieldInterface
     protected $type;
 
     /**
-     * @ORM\OneToMany(targetEntity="\CrisisTextLine\UserProfileBundle\Model\UserProfileValue", mappedBy="userProfileField")
+     * @ORM\OneToMany(targetEntity="\CrisisTextLine\UserProfileBundle\Entity\UserProfileValue", mappedBy="userProfileField")
      */
     protected $values;
 

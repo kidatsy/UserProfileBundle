@@ -1,15 +1,16 @@
 <?php
 
-namespace CrisisTextLine\UserProfileBundle\Model;
+namespace CrisisTextLine\UserProfileBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use CrisisTextLine\UserProfileBundle\Model\UserInterface;
-use CrisisTextLine\UserProfileBundle\Model\UserProfileValue;
+use CrisisTextLine\UserProfileBundle\Entity\UserInterface;
+use CrisisTextLine\UserProfileBundle\Entity\UserProfileValue;
 
 /**
- * @ORM\MappedSuperclass
+ * @ORM\Entity(repositoryClass="CrisisTextLine\UserProfileBundle\Entity\Repository\UserProfileRepository")
+ * @ORM\Table(name="user_profile")
  */
-class UserProfile implements UserProfileInterface
+class UserProfile
 {
     /**
      * @var integer
@@ -24,12 +25,12 @@ class UserProfile implements UserProfileInterface
      * @var integer
      *
      * @ORM\Column(name="user_id", type="integer")
-     * @ORM\OneToOne(targetEntity="\CrisisTextLine\UserProfileBundle\Model\User", mappedBy="userProfile")
+     * @ORM\OneToOne(targetEntity="\CrisisTextLine\UserProfileBundle\Entity\UserInterface", mappedBy="userProfile")
      */
     protected $user;
 
     /**
-     * @ORM\OneToMany(targetEntity="\CrisisTextLine\UserProfileBundle\Model\UserProfileValue", mappedBy="userProfile")
+     * @ORM\OneToMany(targetEntity="\CrisisTextLine\UserProfileBundle\Entity\UserProfileValue", mappedBy="userProfile")
      */
     protected $values;
 

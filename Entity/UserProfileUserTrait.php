@@ -1,9 +1,9 @@
 <?php
 
-namespace CrisisTextLine\UserProfileBundle\Model;
+namespace CrisisTextLine\UserProfileBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use CrisisTextLine\UserProfile\Model\UserProfileInterface;
+use CrisisTextLine\UserProfile\Entity\UserProfile;
 
 /**
  * For use with your user class, add this trait.
@@ -16,7 +16,7 @@ trait UserProfileUserTrait
      * @var int
      *
      * @ORM\Column(name="user_profile_id", type="integer", nullable=true)
-     * @ORM\OneToOne(targetEntity="\CrisisTextLine\UserProfile\Model\UserProfileInterface", inversedBy="user")
+     * @ORM\OneToOne(targetEntity="\CrisisTextLine\UserProfile\Entity\UserProfile", inversedBy="user")
      */
     protected $userProfile;
 
