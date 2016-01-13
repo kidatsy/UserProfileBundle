@@ -3,12 +3,12 @@
     "type": "symfony-bundle",
     "description": "Crisis Text Line User Profile Bundle",
     "keywords": ["User management"],
-    "homepage": "https://github.com/CrisisTextLine",
+    "homepage": "https://github.com/kidatsy/UserProfileBundle",
     "license": "MIT",
     "authors": [
         {
             "name": "Toshiro Kida",
-            "email": "toshiro@crisistextline.org"
+            "email": "toshiro.kida@gmail.com"
         }
     ],
     "require": {
