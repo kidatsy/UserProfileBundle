@@ -3,11 +3,12 @@
 namespace CrisisTextLine\UserProfileBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
+use CrisisTextLine\UserProfileBundle\Model\UserProfileValue;
 
 /**
  * @ORM\MappedSuperclass
  */
-class UserProfileField
+class UserProfileField implements UserProfileFieldInterface
 {
     /**
      * @var integer
@@ -46,6 +47,15 @@ class UserProfileField
      */
     protected $type;
 
+    /**
+     * @ORM\OneToMany(targetEntity="\CrisisTextLine\UserProfileBundle\Model\UserProfileValue", mappedBy="userProfileField")
+     */
+    protected $values;
+
+    public function __construct()
+    {
+        $this->values = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -147,5 +157,38 @@ class UserProfileField
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * Add values
+     *
+     * @param UserProfileValue $values
+     * @return UserProfile
+     */
+    public function addValue(UserProfileValue $values)
+    {
+        $this->values[] = $values;
+
+        return $this;
+    }
+
+    /**
+     * Remove values
+     *
+     * @param UserProfileValue $values
+     */
+    public function removeValue(UserProfileValue $values)
+    {
+        $this->values->removeElement($values);
+    }
+
+    /**
+     * Get values
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getValues()
+    {
+        return $this->values;
     }
 }

@@ -3,11 +3,10 @@
 namespace CrisisTextLine\UserProfileBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
-use CrisisTextLine\UserProfile\Model\UserProfile;
+use CrisisTextLine\UserProfile\Model\UserProfileInterface;
 
 /**
- * For use with your user class, easily implement Two Factor auth by 'using' this
- * trait.
+ * For use with your user class, add this trait.
  */
 trait UserProfileUserTrait
 {
@@ -17,7 +16,7 @@ trait UserProfileUserTrait
      * @var int
      *
      * @ORM\Column(name="user_profile_id", type="integer", nullable=true)
-     * @ORM\OneToOne(targetEntity="\CrisisTextLine\UserProfile\Model\UserProfile", inversedBy="user")
+     * @ORM\OneToOne(targetEntity="\CrisisTextLine\UserProfile\Model\UserProfileInterface", inversedBy="user")
      */
     protected $userProfile;
 
@@ -36,7 +35,7 @@ trait UserProfileUserTrait
      *
      * @param UserProfile $userProfile
      */
-    public function setUserProfile($userProfile)
+    public function setUserProfile(UserProfileInterface $userProfile)
     {
         $this->userProfile = $userProfile;
 

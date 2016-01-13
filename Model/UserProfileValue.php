@@ -4,10 +4,13 @@ namespace CrisisTextLine\UserProfileBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use CrisisTextLine\UserProfileBundle\Model\UserProfileInterface;
+use CrisisTextLine\UserProfileBundle\Model\UserProfileFieldInterface;
+
 /**
  * @ORM\MappedSuperclass
  */
-class UserProfileValue
+class UserProfileValue implements UserProfileValueInterface
 {
     /**
      * @var integer
@@ -22,6 +25,7 @@ class UserProfileValue
      * @var integer
      *
      * @ORM\Column(name="user_profile_id", type="integer")
+     * @ORM\ManyToOne(targetEntity="\CrisisTextLine\UserProfileBundle\Model\UserProfile", inversedBy="values")
      */
     protected $userProfile;
 
@@ -29,6 +33,7 @@ class UserProfileValue
      * @var integer
      *
      * @ORM\Column(name="user_profile_field_id", type="integer")
+     * @ORM\ManyToOne(targetEntity="\CrisisTextLine\UserProfileBundle\Model\UserProfileField", inversedBy="values")
      */
     protected $userProfileField;
 
@@ -63,7 +68,7 @@ class UserProfileValue
      * @param integer $userProfile
      * @return UserProfileValue
      */
-    public function setUserProfile($userProfile)
+    public function setUserProfile(UserProfileInterface $userProfile)
     {
         $this->userProfile = $userProfile;
 
@@ -86,7 +91,7 @@ class UserProfileValue
      * @param integer $userProfileField
      * @return UserProfileValue
      */
-    public function setUserProfileField($userProfileField)
+    public function setUserProfileField(UserProfileFieldInterface $userProfileField)
     {
         $this->userProfileField = $userProfileField;
 
