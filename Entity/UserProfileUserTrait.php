@@ -3,7 +3,7 @@
 namespace CrisisTextLine\UserProfileBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use CrisisTextLine\UserProfile\Entity\UserProfile;
+use CrisisTextLine\UserProfileBundle\Entity\UserProfile;
 
 /**
  * For use with your user class, add this trait.
@@ -15,8 +15,8 @@ trait UserProfileUserTrait
      *
      * @var int
      *
-     * @ORM\Column(name="user_profile_id", type="integer", nullable=true)
-     * @ORM\OneToOne(targetEntity="\CrisisTextLine\UserProfile\Entity\UserProfile", inversedBy="user")
+     * @ORM\OneToOne(targetEntity="\CrisisTextLine\UserProfileBundle\Entity\UserProfile")
+     * @ORM\JoinColumn(name="user_profile_id", referencedColumnName="id")
      */
     protected $userProfile;
 
@@ -35,7 +35,7 @@ trait UserProfileUserTrait
      *
      * @param UserProfile $userProfile
      */
-    public function setUserProfile(UserProfileInterface $userProfile)
+    public function setUserProfile(UserProfile $userProfile)
     {
         $this->userProfile = $userProfile;
 

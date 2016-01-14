@@ -25,16 +25,16 @@ class UserProfileValue
     /**
      * @var integer
      *
-     * @ORM\Column(name="user_profile_id", type="integer")
      * @ORM\ManyToOne(targetEntity="\CrisisTextLine\UserProfileBundle\Entity\UserProfile", inversedBy="values")
+     * @ORM\JoinColumn(name="user_profile_id", referencedColumnName="id")
      */
     protected $userProfile;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="user_profile_field_id", type="integer")
      * @ORM\ManyToOne(targetEntity="\CrisisTextLine\UserProfileBundle\Entity\UserProfileField", inversedBy="values")
+     * @ORM\JoinColumn(name="user_profile_field_id", referencedColumnName="id")
      */
     protected $userProfileField;
 

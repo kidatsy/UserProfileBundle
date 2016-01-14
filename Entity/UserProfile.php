@@ -3,7 +3,8 @@
 namespace CrisisTextLine\UserProfileBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use CrisisTextLine\UserProfileBundle\Entity\UserInterface;
+// use FOS\UserBundle\Model\User;
+use CrisisTextLine\UserProfileBundle\Entity\User;
 use CrisisTextLine\UserProfileBundle\Entity\UserProfileValue;
 
 /**
@@ -20,14 +21,6 @@ class UserProfile
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="user_id", type="integer")
-     * @ORM\OneToOne(targetEntity="\CrisisTextLine\UserProfileBundle\Entity\UserInterface", mappedBy="userProfile")
-     */
-    protected $user;
 
     /**
      * @ORM\OneToMany(targetEntity="\CrisisTextLine\UserProfileBundle\Entity\UserProfileValue", mappedBy="userProfile")
@@ -54,29 +47,6 @@ class UserProfile
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set userId
-     *
-     * @param integer $user
-     * @return UserProfileInterface
-     */
-    public function setUser(UserInterface $user)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get user
-     *
-     * @return integer 
-     */
-    public function getUser()
-    {
-        return $this->user;
     }
 
     /**
