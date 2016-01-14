@@ -56,3 +56,42 @@ crisis_text_line_user_profile:
     type:     annotation
     prefix:   /
 ```
+
+Step 4: Add the UserProfileUserTrait to User entity
+---------------------------------------------------
+
+In your User class, add the following:
+
+```php
+<?php
+// <YourBundle>/User.php
+
+// ...
+use FOS\UserBundle\Model\User as BaseUser;
+use CrisisTextLine\UserProfileBundle\Entity\UserProfileUserTrait;
+
+// ...
+class User extends BaseUser
+{
+    use UserProfileUserTrait;
+
+    // ...
+}
+
+Step 5: Override the templates
+------------------------------
+
+Override the templates by putting stuff in:
+
+- `app/Resources/CrisisTextLineUserProfileBundle/views/UserProfile`
+- `app/Resources/CrisisTextLineUserProfileBundle/views/UserProfileField`
+- `app/Resources/CrisisTextLineUserProfileBundle/views/UserProfileValue`
+
+Step 6: Add the JS to your main template
+----------------------------------------
+
+Add the following line(s) to the `<head>` of your app's main template:
+
+```html
+
+```
