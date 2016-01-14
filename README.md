@@ -77,6 +77,7 @@ class User extends BaseUser
 
     // ...
 }
+```
 
 Step 5: Override the templates
 ------------------------------
