@@ -3,6 +3,9 @@
 namespace CrisisTextLine\UserProfileBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Doctrine\Common\Collections\ArrayCollection;
+
 use CrisisTextLine\UserProfileBundle\Entity\UserProfileValue;
 
 /**
@@ -28,9 +31,18 @@ class UserProfile
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="timestamp", type="datetime")
+     * @ORM\Column(name="time_created", type="datetime")
+     * @Gedmo\Timestampable(on="create")
      */
-    protected $timestamp;
+    protected $timeCreated;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="time_last_edited", type="datetime")
+     * @Gedmo\Timestampable(on="update")
+     */
+    protected $timeLastEdited;
 
     public function __construct()
     {
@@ -81,25 +93,48 @@ class UserProfile
     }
 
     /**
-     * Set timestamp
+     * Set timeCreated
      *
-     * @param \DateTime $timestamp
+     * @param \DateTime $timeCreated
      * @return UserProfile
      */
-    public function setTimestamp($timestamp)
+    public function setTimeCreated($timeCreated)
     {
-        $this->timestamp = $timestamp;
+        $this->timeCreated = $timeCreated;
 
         return $this;
     }
 
     /**
-     * Get timestamp
+     * Get timeCreated
      *
      * @return \DateTime 
      */
-    public function getTimestamp()
+    public function getTimeCreated()
     {
-        return $this->timestamp;
+        return $this->timeCreated;
+    }
+
+    /**
+     * Set timeLastEdited
+     *
+     * @param \DateTime $timeLastEdited
+     * @return UserProfile
+     */
+    public function setTimeLastEdited($timeLastEdited)
+    {
+        $this->timeLastEdited = $timeLastEdited;
+
+        return $this;
+    }
+
+    /**
+     * Get timeLastEdited
+     *
+     * @return \DateTime 
+     */
+    public function getTimeLastEdited()
+    {
+        return $this->timeLastEdited;
     }
 }

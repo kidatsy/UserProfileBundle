@@ -13,28 +13,10 @@ use CrisisTextLine\UserProfileBundle\Form\UserProfileType;
 /**
  * UserProfile controller.
  *
- * @Route("/user/profiles")
+ * @Route("/user/profile")
  */
 class UserProfileController extends Controller
 {
-
-    /**
-     * Lists all UserProfile entities.
-     *
-     * @Route("/", name="user_profile")
-     * @Method("GET")
-     * @Template()
-     */
-    public function indexAction()
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entities = $em->getRepository('CrisisTextLineUserProfileBundle:UserProfile')->findAll();
-
-        return array(
-            'entities' => $entities,
-        );
-    }
     /**
      * Creates a new UserProfile entity.
      *

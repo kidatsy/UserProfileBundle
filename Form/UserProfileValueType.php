@@ -16,7 +16,7 @@ class UserProfileValueType extends AbstractType
     {
         $builder
             ->add('value')
-            ->add('timestamp')
+            ->add('timeLastEdited')
             ->add('userProfile')
             ->add('userProfileField')
         ;

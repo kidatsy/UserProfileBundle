@@ -1,13 +1,14 @@
-{% extends '::base.html.twig' %}
+{% extends 'CrisisTextLineUserProfileBundle::base.html.twig' %}
 
-{% block body -%}
+{% block userprofiles %}
     <h1>UserProfile list</h1>
 
     <table class="records_list">
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Timestamp</th>
+                <th>Time Created</th>
+                <th>Last Edited</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -15,7 +16,8 @@
         {% for entity in entities %}
             <tr>
                 <td><a href="{{ path('user_profile_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                <td>{% if entity.timestamp %}{{ entity.timestamp|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if entity.timeCreated %}{{ entity.timeCreated|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if entity.timeLastEdited %}{{ entity.timeLastEdited|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>
                 <ul>
                     <li>

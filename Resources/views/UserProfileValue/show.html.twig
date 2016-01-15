@@ -1,6 +1,6 @@
-{% extends '::base.html.twig' %}
+{% extends 'CrisisTextLineUserProfileBundle::base.html.twig' %}
 
-{% block body -%}
+{% block userprofiles %}
     <h1>UserProfileValue</h1>
 
     <table class="record_properties">
@@ -14,8 +14,8 @@
                 <td>{{ entity.value }}</td>
             </tr>
             <tr>
-                <th>Timestamp</th>
-                <td>{{ entity.timestamp|date('Y-m-d H:i:s') }}</td>
+                <th>Last Edited</th>
+                <td>{{ entity.timeLastEdited|date('Y-m-d H:i:s') }}</td>
             </tr>
         </tbody>
     </table>

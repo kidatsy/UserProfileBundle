@@ -13,7 +13,7 @@ use CrisisTextLine\UserProfileBundle\Form\UserProfileFieldType;
 /**
  * UserProfileField controller.
  *
- * @Route("/admin/profiles/field")
+ * @Route("/admin/profiles/fields")
  */
 class UserProfileFieldController extends Controller
 {

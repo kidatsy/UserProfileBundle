@@ -3,6 +3,7 @@
 namespace CrisisTextLine\UserProfileBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use CrisisTextLine\UserProfileBundle\Entity\UserProfile;
 use CrisisTextLine\UserProfileBundle\Entity\UserProfileField;
@@ -48,9 +49,10 @@ class UserProfileValue
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="timestamp", type="datetime")
+     * @ORM\Column(name="time_last_edited", type="datetime")
+     * @Gedmo\Timestampable(on="update")
      */
-    protected $timestamp;
+    protected $timeLastEdited;
 
 
     /**
@@ -133,25 +135,25 @@ class UserProfileValue
     }
 
     /**
-     * Set timestamp
+     * Set timeLastEdited
      *
-     * @param \DateTime $timestamp
+     * @param \DateTime $timeLastEdited
      * @return UserProfileValue
      */
-    public function setTimestamp($timestamp)
+    public function setTimeLastEdited($timeLastEdited)
     {
-        $this->timestamp = $timestamp;
+        $this->timeLastEdited = $timeLastEdited;
 
         return $this;
     }
 
     /**
-     * Get timestamp
+     * Get timeLastEdited
      *
      * @return \DateTime 
      */
-    public function getTimestamp()
+    public function getTimeLastEdited()
     {
-        return $this->timestamp;
+        return $this->timeLastEdited;
     }
 }
