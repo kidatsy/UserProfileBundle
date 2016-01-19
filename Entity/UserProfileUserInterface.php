@@ -1,6 +1,6 @@
 <?php
 
-namespace CrisisTextLine\UserProfileBundle\Model;
+namespace CrisisTextLine\UserProfileBundle\Entity;
 
 use CrisisTextLine\UserProfileBundle\Entity\UserProfile;
 

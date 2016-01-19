@@ -115,7 +115,6 @@ You can override specific templates for each entity by putting replacements into
 
 - `app/Resources/CrisisTextLineUserProfileBundle/views/UserProfile`
 - `app/Resources/CrisisTextLineUserProfileBundle/views/UserProfileField`
-- `app/Resources/CrisisTextLineUserProfileBundle/views/UserProfileValue`
 
 Step 8: Add the JS to your main template
 ----------------------------------------

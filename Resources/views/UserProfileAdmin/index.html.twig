@@ -6,25 +6,21 @@
     <table class="records_list">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Time Created</th>
-                <th>Last Edited</th>
+                <th>User</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
         {% for entity in entities %}
             <tr>
-                <td><a href="{{ path('user_profile_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                <td>{% if entity.timeCreated %}{{ entity.timeCreated|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{% if entity.timeLastEdited %}{{ entity.timeLastEdited|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td><a href="{{ path('user_profile_show', { 'id': entity.user.id }) }}">{{ entity.user.name }}</a></td>
                 <td>
                 <ul>
                     <li>
-                        <a href="{{ path('user_profile_show', { 'id': entity.id }) }}">show</a>
+                        <a href="{{ path('user_profile_show', { 'id': entity.user.id }) }}">show</a>
                     </li>
                     <li>
-                        <a href="{{ path('user_profile_edit', { 'id': entity.id }) }}">edit</a>
+                        <a href="{{ path('user_profile_edit', { 'id': entity.user.id }) }}">edit</a>
                     </li>
                 </ul>
                 </td>
@@ -35,7 +31,7 @@
 
         <ul>
         <li>
-            <a href="{{ path('user_profile_new') }}">
+            <a href="{{ path('user_profile_admin_new') }}">
                 Create a new entry
             </a>
         </li>

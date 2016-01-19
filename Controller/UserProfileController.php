@@ -7,129 +7,92 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+
+use CrisisTextLine\UserProfileBundle\Model\UserProfileUserInterface;
 use CrisisTextLine\UserProfileBundle\Entity\UserProfile;
 use CrisisTextLine\UserProfileBundle\Form\UserProfileType;
 
 /**
  * UserProfile controller.
  *
- * @Route("/user/profile")
+ * @Route("/user")
  */
 class UserProfileController extends Controller
 {
-    /**
-     * Creates a new UserProfile entity.
-     *
-     * @Route("/", name="user_profile_create")
-     * @Method("POST")
-     * @Template("CrisisTextLineUserProfileBundle:UserProfile:new.html.twig")
-     */
-    public function createAction(Request $request)
-    {
-        $entity = new UserProfile();
-        $form = $this->createCreateForm($entity);
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('user_profile_show', array('id' => $entity->getId())));
-        }
-
-        return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        );
-    }
-
-    /**
-     * Creates a form to create a UserProfile entity.
-     *
-     * @param UserProfile $entity The entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createCreateForm(UserProfile $entity)
-    {
-        $form = $this->createForm(new UserProfileType(), $entity, array(
-            'action' => $this->generateUrl('user_profile_create'),
-            'method' => 'POST',
-        ));
-
-        $form->add('submit', 'submit', array('label' => 'Create'));
-
-        return $form;
-    }
-
-    /**
-     * Displays a form to create a new UserProfile entity.
-     *
-     * @Route("/new", name="user_profile_new")
-     * @Method("GET")
-     * @Template()
-     */
-    public function newAction()
-    {
-        $entity = new UserProfile();
-        $form   = $this->createCreateForm($entity);
-
-        return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        );
-    }
 
     /**
      * Finds and displays a UserProfile entity.
      *
-     * @Route("/{id}", name="user_profile_show")
+     * @Route("/{id}/profile", name="user_profile_show")
      * @Method("GET")
      * @Template()
      */
     public function showAction($id)
     {
         $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('CrisisTextLineUserProfileBundle:UserProfile')->find($id);
+        $entity = $em->getRepository('CrisisTextLineUserProfileBundle:UserProfile')->findByUserId($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find UserProfile entity.');
         }
 
-        $deleteForm = $this->createDeleteForm($id);
-
         return array(
             'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
         );
     }
 
     /**
      * Displays a form to edit an existing UserProfile entity.
      *
-     * @Route("/{id}/edit", name="user_profile_edit")
+     * @Route("/{id}/profile/edit", name="user_profile_edit")
      * @Method("GET")
      * @Template()
      */
     public function editAction($id)
     {
         $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('CrisisTextLineUserProfileBundle:UserProfile')->find($id);
+        $entity = $em->getRepository('CrisisTextLineUserProfileBundle:UserProfile')->findByUserId($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find UserProfile entity.');
         }
 
         $editForm = $this->createEditForm($entity);
-        $deleteForm = $this->createDeleteForm($id);
 
         return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+        );
+    }
+
+    /**
+     * Edits an existing UserProfile entity.
+     *
+     * @Route("/{id}/profile", name="user_profile_update")
+     * @Method("PUT")
+     * @Template("CrisisTextLineUserProfileBundle:UserProfile:edit.html.twig")
+     */
+    public function updateAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('CrisisTextLineUserProfileBundle:UserProfile')->findByUserId($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find UserProfile entity.');
+        }
+
+        $editForm = $this->createEditForm($entity);
+        $editForm->handleRequest($request);
+
+        if ($editForm->isValid()) {
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('user_profile_edit', array('id' => $entity->getUser()->getId())));
+        }
+
+        return array(
+            'entity'      => $entity,
+            'edit_form'   => $editForm->createView(),
         );
     }
 
@@ -143,7 +106,7 @@ class UserProfileController extends Controller
     private function createEditForm(UserProfile $entity)
     {
         $form = $this->createForm(new UserProfileType(), $entity, array(
-            'action' => $this->generateUrl('user_profile_update', array('id' => $entity->getId())),
+            'action' => $this->generateUrl('user_profile_update', array('id' => $entity->getUser()->getId())),
             'method' => 'PUT',
         ));
 
@@ -151,79 +114,62 @@ class UserProfileController extends Controller
 
         return $form;
     }
+
     /**
-     * Edits an existing UserProfile entity.
+     * Does not delete a UserProfile entity.
      *
-     * @Route("/{id}", name="user_profile_update")
-     * @Method("PUT")
-     * @Template("CrisisTextLineUserProfileBundle:UserProfile:edit.html.twig")
-     */
-    public function updateAction(Request $request, $id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('CrisisTextLineUserProfileBundle:UserProfile')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find UserProfile entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createEditForm($entity);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isValid()) {
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('user_profile_edit', array('id' => $id)));
-        }
-
-        return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        );
-    }
-    /**
-     * Deletes a UserProfile entity.
-     *
-     * @Route("/{id}", name="user_profile_delete")
+     * @Route("/{id}/profile", name="user_profile_delete")
      * @Method("DELETE")
      */
-    public function deleteAction(Request $request, $id)
+    public function deleteAction($id)
     {
-        $form = $this->createDeleteForm($id);
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('CrisisTextLineUserProfileBundle:UserProfile')->find($id);
-
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find UserProfile entity.');
-            }
-
-            $em->remove($entity);
-            $em->flush();
-        }
-
-        return $this->redirect($this->generateUrl('user_profile'));
+        // TC - rename this to be the correct kind of exception.
+        throw $this->createNotFoundException('Sorry, not able to delete profiles once they are created.');
     }
 
     /**
-     * Creates a form to delete a UserProfile entity by id.
+     * Does not delete, redirects back to profile show.
      *
-     * @param mixed $id The entity id
-     *
-     * @return \Symfony\Component\Form\Form The form
+     * @Route("/{id}/profile/delete", name="user_profile_delete_redirect")
+     * @Method("GET")
      */
-    private function createDeleteForm($id)
+    public function deleteRedirectAction($id)
     {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('user_profile_delete', array('id' => $id)))
-            ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
-            ->getForm()
-        ;
+        // TC - rename this to be the correct kind of exception.
+        return $this->redirect($this->generateUrl('user_profile_delete', array('id' => $id)));
+        // return $this->redirect($this->generateUrl('user_profile_show', array('id' => $id)));
     }
+
+
+    /**
+     * Run redirectToAdminOrError()
+     *
+     * @Route("/{id}/profile/new", name="user_profile_new")
+     * @Method("GET")
+     */
+    public function newAction()
+    {
+        return $this->redirectToAdminOrError('new');
+    }
+
+    /**
+     * Run redirectToAdminOrError()
+     *
+     * @Route("/{id}/profile/create", name="user_profile_create")
+     * @Method("POST")
+     */
+    public function createAction()
+    {
+        return $this->redirectToAdminOrError('create');
+    }
+
+    /**
+     * Redirects to Admin UserProfile create URL if got access. Otherwise, return BLAH
+     */
+    private function redirectToAdminOrError($routeAction)
+    {
+        // TC - Add in correct level checking here
+        return $this->redirect($this->generateUrl('user_profile_admin_' . $routeAction));
+    }
+
 }

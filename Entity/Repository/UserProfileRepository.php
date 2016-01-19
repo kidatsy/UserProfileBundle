@@ -12,4 +12,15 @@ use Doctrine\ORM\EntityRepository;
  */
 class UserProfileRepository extends EntityRepository
 {
+
+    public function findByUserId($uid)
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->where('p.user = :uid')
+            ->setParameter('uid', $uid)
+        ;
+
+        return $qb->getQuery()->getSingleResult();
+    }
+
 }

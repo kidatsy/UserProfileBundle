@@ -7,7 +7,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 
 use CrisisTextLine\UserProfileBundle\Entity\UserProfileValue;
-use CrisisTextLine\UserProfileBundle\Model\UserProfileUserInterface;
+use CrisisTextLine\UserProfileBundle\Entity\UserProfileUserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="CrisisTextLine\UserProfileBundle\Entity\Repository\UserProfileRepository")
@@ -25,7 +25,7 @@ class UserProfile
     protected $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="\CrisisTextLine\UserProfileBundle\Model\UserProfileUserInterface", mappedBy="userProfile")
+     * @ORM\OneToOne(targetEntity="\CrisisTextLine\UserProfileBundle\Entity\UserProfileUserInterface", mappedBy="userProfile")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $user;
@@ -51,9 +51,10 @@ class UserProfile
      */
     protected $timeLastEdited;
 
-    public function __construct()
+    public function __construct(UserProfileUserInterface $user)
     {
         $this->values = new ArrayCollection();
+        $this->setUser($user);
     }
 
     /**

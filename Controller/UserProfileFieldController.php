@@ -21,7 +21,7 @@ class UserProfileFieldController extends Controller
     /**
      * Lists all UserProfileField entities.
      *
-     * @Route("/", name="admin_profiles_field")
+     * @Route("/", name="user_profile_field")
      * @Method("GET")
      * @Template()
      */
@@ -38,7 +38,7 @@ class UserProfileFieldController extends Controller
     /**
      * Creates a new UserProfileField entity.
      *
-     * @Route("/", name="admin_profiles_field_create")
+     * @Route("/", name="user_profile_field_create")
      * @Method("POST")
      * @Template("CrisisTextLineUserProfileBundle:UserProfileField:new.html.twig")
      */
@@ -53,7 +53,7 @@ class UserProfileFieldController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('admin_profiles_field_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('user_profile_field_show', array('id' => $entity->getId())));
         }
 
         return array(
@@ -72,7 +72,7 @@ class UserProfileFieldController extends Controller
     private function createCreateForm(UserProfileField $entity)
     {
         $form = $this->createForm(new UserProfileFieldType(), $entity, array(
-            'action' => $this->generateUrl('admin_profiles_field_create'),
+            'action' => $this->generateUrl('user_profile_field_create'),
             'method' => 'POST',
         ));
 
@@ -84,7 +84,7 @@ class UserProfileFieldController extends Controller
     /**
      * Displays a form to create a new UserProfileField entity.
      *
-     * @Route("/new", name="admin_profiles_field_new")
+     * @Route("/new", name="user_profile_field_new")
      * @Method("GET")
      * @Template()
      */
@@ -102,7 +102,7 @@ class UserProfileFieldController extends Controller
     /**
      * Finds and displays a UserProfileField entity.
      *
-     * @Route("/{id}", name="admin_profiles_field_show")
+     * @Route("/{id}", name="user_profile_field_show")
      * @Method("GET")
      * @Template()
      */
@@ -127,7 +127,7 @@ class UserProfileFieldController extends Controller
     /**
      * Displays a form to edit an existing UserProfileField entity.
      *
-     * @Route("/{id}/edit", name="admin_profiles_field_edit")
+     * @Route("/{id}/edit", name="user_profile_field_edit")
      * @Method("GET")
      * @Template()
      */
@@ -161,7 +161,7 @@ class UserProfileFieldController extends Controller
     private function createEditForm(UserProfileField $entity)
     {
         $form = $this->createForm(new UserProfileFieldType(), $entity, array(
-            'action' => $this->generateUrl('admin_profiles_field_update', array('id' => $entity->getId())),
+            'action' => $this->generateUrl('user_profile_field_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
 
@@ -172,7 +172,7 @@ class UserProfileFieldController extends Controller
     /**
      * Edits an existing UserProfileField entity.
      *
-     * @Route("/{id}", name="admin_profiles_field_update")
+     * @Route("/{id}", name="user_profile_field_update")
      * @Method("PUT")
      * @Template("CrisisTextLineUserProfileBundle:UserProfileField:edit.html.twig")
      */
@@ -193,7 +193,7 @@ class UserProfileFieldController extends Controller
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('admin_profiles_field_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('user_profile_field_edit', array('id' => $id)));
         }
 
         return array(
@@ -205,7 +205,7 @@ class UserProfileFieldController extends Controller
     /**
      * Deletes a UserProfileField entity.
      *
-     * @Route("/{id}", name="admin_profiles_field_delete")
+     * @Route("/{id}", name="user_profile_field_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
@@ -225,7 +225,7 @@ class UserProfileFieldController extends Controller
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('admin_profiles_field'));
+        return $this->redirect($this->generateUrl('user_profile_field'));
     }
 
     /**
@@ -238,7 +238,7 @@ class UserProfileFieldController extends Controller
     private function createDeleteForm($id)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('admin_profiles_field_delete', array('id' => $id)))
+            ->setAction($this->generateUrl('user_profile_field_delete', array('id' => $id)))
             ->setMethod('DELETE')
             ->add('submit', 'submit', array('label' => 'Delete'))
             ->getForm()
