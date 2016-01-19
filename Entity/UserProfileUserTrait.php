@@ -16,7 +16,7 @@ trait UserProfileUserTrait
      *
      * @var int
      *
-     * @ORM\OneToOne(targetEntity="\CrisisTextLine\UserProfileBundle\Entity\UserProfile")
+     * @ORM\OneToOne(targetEntity="\CrisisTextLine\UserProfileBundle\Entity\UserProfile", inversedBy="user")
      * @ORM\JoinColumn(name="user_profile_id", referencedColumnName="id")
      */
     protected $userProfile;

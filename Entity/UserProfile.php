@@ -7,6 +7,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 
 use CrisisTextLine\UserProfileBundle\Entity\UserProfileValue;
+use CrisisTextLine\UserProfileBundle\Model\UserProfileUserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="CrisisTextLine\UserProfileBundle\Entity\Repository\UserProfileRepository")
@@ -22,6 +23,12 @@ class UserProfile
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
+    /**
+     * @ORM\OneToOne(targetEntity="\CrisisTextLine\UserProfileBundle\Model\UserProfileUserInterface", mappedBy="userProfile")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    protected $user;
 
     /**
      * @ORM\OneToMany(targetEntity="\CrisisTextLine\UserProfileBundle\Entity\UserProfileValue", mappedBy="userProfile")
@@ -57,6 +64,29 @@ class UserProfile
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set user
+     *
+     * @param UserProfileUserInterface $user
+     * @return UserProfile
+     */
+    public function setUser(UserProfileUserInterface $user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return UserProfileUserInterface $user 
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 
     /**
