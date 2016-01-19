@@ -57,7 +57,21 @@ crisis_text_line_user_profile:
     prefix:   /
 ```
 
-Step 4: Add the UserProfileUserTrait to User entity
+Step 4: Tell the bundle how to resolve the User Entity
+----------------------------------------------------
+
+Add the following to `app/config/config.yml`, with the specifics of your own User Entity class:
+
+```yml
+doctrine:
+    # ...
+    orm:
+        # ...
+        resolve_target_entities:
+            CrisisTextLine\UserProfileBundle\Model\UserProfileUserInterface: <YourBundle>\Entity\<YourUserEntity>
+```
+
+Step 5: Add UserProfileUserTrait and UserProfileUserInterface to your User entity
 ---------------------------------------------------
 
 In your User class, add the following:
@@ -69,9 +83,10 @@ In your User class, add the following:
 // ...
 use FOS\UserBundle\Model\User as BaseUser;
 use CrisisTextLine\UserProfileBundle\Entity\UserProfileUserTrait;
+use CrisisTextLine\UserProfileBundle\Model\UserProfileUserInterface;
 
 // ...
-class User extends BaseUser
+class User extends BaseUser implements UserProfileUserInterface
 {
     use UserProfileUserTrait;
 
@@ -79,16 +94,30 @@ class User extends BaseUser
 }
 ```
 
-Step 5: Override the templates
+Step 6: Run a Migration (if need be)
+------------------------------------
+
+If you're using the Doctrine Migrations bundle, make a new migration via `php app/console doctrine:migrations:diff` and run it. Otherwise, update your DB accordingly.
+
+Step 7: Override the templates
 ------------------------------
 
-Override the templates by putting stuff in:
+If you'd like to override the base Twig template to fit into your own front-end environment, create a new `app/Resources/CrisisTextLineUserProfileBundle/views/base.html.twig` with the following:
+
+```twig
+{% extends <Your Base Twig Template> %}
+
+{% block userprofiles %}
+{% endblock %}
+```
+
+You can override specific templates for each entity by putting replacements into the following:
 
 - `app/Resources/CrisisTextLineUserProfileBundle/views/UserProfile`
 - `app/Resources/CrisisTextLineUserProfileBundle/views/UserProfileField`
 - `app/Resources/CrisisTextLineUserProfileBundle/views/UserProfileValue`
 
-Step 6: Add the JS to your main template
+Step 8: Add the JS to your main template
 ----------------------------------------
 
 Add the following line(s) to the `<head>` of your app's main template:
