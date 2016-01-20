@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 
+use CrisisTextLine\UserProfileBundle\Entity\UserProfileField;
 use CrisisTextLine\UserProfileBundle\Entity\UserProfileValue;
 use CrisisTextLine\UserProfileBundle\Entity\UserProfileUserInterface;
 
@@ -51,10 +52,17 @@ class UserProfile
      */
     protected $timeLastEdited;
 
-    public function __construct(UserProfileUserInterface $user)
+    public function __construct($user = null)
     {
         $this->values = new ArrayCollection();
-        $this->setUser($user);
+        if ($user !== null) {
+            $this->user = $user;
+        }
+    }
+
+    public function __toString()
+    {
+        return (string) $this->getUser();
     }
 
     /**
@@ -167,5 +175,23 @@ class UserProfile
     public function getTimeLastEdited()
     {
         return $this->timeLastEdited;
+    }
+
+    /**
+     * Check to see if 
+     *
+     * @param UserProfileField $field
+     * 
+     * @return UserProfileValue $value
+     */
+    public function getValueForField(UserProfileField $field)
+    {
+        foreach ($this->values as $value) {
+            if ($value->getUserProfileField() == $field) {
+                return $value;
+            } else {
+                return false;
+            }
+        }
     }
 }

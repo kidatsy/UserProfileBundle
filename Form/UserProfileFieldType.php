@@ -16,6 +16,7 @@ class UserProfileFieldType extends AbstractType
     {
         $builder
             ->add('name')
+            ->add('defaultValue')
             ->add('readAccess')
             ->add('writeAccess')
             ->add('type')

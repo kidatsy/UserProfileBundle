@@ -6,17 +6,24 @@
     <table class="record_properties">
         <tbody>
             <tr>
-                <th>Id</th>
+                <th>Name</th>
+                <td>{{ entity.user.name }}</td>
+                {# // TC - this ^ is CTL's variable. Need to set to username here and provide for override #}
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ entity.user.email }}</td>
+            </tr>
+            <tr>
+                <th>User Id</th>
                 <td>{{ entity.id }}</td>
             </tr>
-            <tr>
-                <th>Time Created</th>
-                <td>{{ entity.timeCreated|date('Y-m-d H:i:s') }}</td>
-            </tr>
-            <tr>
-                <th>Last Edited</th>
-                <td>{{ entity.timeLastEdited|date('Y-m-d H:i:s') }}</td>
-            </tr>
+            {% for value in entity.values %}
+                <tr>
+                    <th>{{ value.userProfileField.name }}</th>
+                    <td>{{ value.value }}</td>
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
 

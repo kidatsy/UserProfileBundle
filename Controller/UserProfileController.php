@@ -29,12 +29,7 @@ class UserProfileController extends Controller
      */
     public function showAction($id)
     {
-        $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('CrisisTextLineUserProfileBundle:UserProfile')->findByUserId($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find UserProfile entity.');
-        }
+        $entity = $this->getOrCreateUserProfile($id);
 
         return array(
             'entity'      => $entity,
@@ -50,13 +45,7 @@ class UserProfileController extends Controller
      */
     public function editAction($id)
     {
-        $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('CrisisTextLineUserProfileBundle:UserProfile')->findByUserId($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find UserProfile entity.');
-        }
-
+        $entity = $this->getOrCreateUserProfile($id);
         $editForm = $this->createEditForm($entity);
 
         return array(
@@ -75,11 +64,7 @@ class UserProfileController extends Controller
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('CrisisTextLineUserProfileBundle:UserProfile')->findByUserId($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find UserProfile entity.');
-        }
+        $entity = $this->getOrCreateUserProfile($id);
 
         $editForm = $this->createEditForm($entity);
         $editForm->handleRequest($request);
@@ -116,6 +101,26 @@ class UserProfileController extends Controller
     }
 
     /**
+    * Gets or creates user profile, given user's ID
+    *
+    * @param integer $id ID
+    *
+    * @return UserProfile $profile
+    */
+    private function getOrCreateUserProfile($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $profile = $em->getRepository('CrisisTextLineUserProfileBundle:UserProfile')->findByUserId($id);
+
+        if (!$profile) {
+            $user = $this->get('fos_user.user_manager')->findUserBy(array('id' => $id));
+            $profile = $this->get('crisistextline.user_profile_manager')->createUserProfile($user);
+        }
+
+        return $profile;
+    }
+
+    /**
      * Does not delete a UserProfile entity.
      *
      * @Route("/{id}/profile", name="user_profile_delete")
@@ -135,9 +140,7 @@ class UserProfileController extends Controller
      */
     public function deleteRedirectAction($id)
     {
-        // TC - rename this to be the correct kind of exception.
         return $this->redirect($this->generateUrl('user_profile_delete', array('id' => $id)));
-        // return $this->redirect($this->generateUrl('user_profile_show', array('id' => $id)));
     }
 
 
@@ -149,7 +152,7 @@ class UserProfileController extends Controller
      */
     public function newAction()
     {
-        return $this->redirectToAdminOrError('new');
+        return $this->redirectToAdminOrException('new');
     }
 
     /**
@@ -160,13 +163,13 @@ class UserProfileController extends Controller
      */
     public function createAction()
     {
-        return $this->redirectToAdminOrError('create');
+        return $this->redirectToAdminOrException('create');
     }
 
     /**
      * Redirects to Admin UserProfile create URL if got access. Otherwise, return BLAH
      */
-    private function redirectToAdminOrError($routeAction)
+    private function redirectToAdminOrException($routeAction)
     {
         // TC - Add in correct level checking here
         return $this->redirect($this->generateUrl('user_profile_admin_' . $routeAction));

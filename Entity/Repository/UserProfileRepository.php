@@ -20,7 +20,12 @@ class UserProfileRepository extends EntityRepository
             ->setParameter('uid', $uid)
         ;
 
-        return $qb->getQuery()->getSingleResult();
+        try {
+            return $qb->getQuery()->getSingleResult();
+        } catch (\Exception $e) {
+            return false;
+        }
+
     }
 
 }

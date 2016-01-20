@@ -5,6 +5,7 @@ namespace CrisisTextLine\UserProfileBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
+use CrisisTextLine\UserProfileBundle\CrisisTextLineUserProfileBundle as Bundle;
 use CrisisTextLine\UserProfileBundle\Entity\UserProfile;
 use CrisisTextLine\UserProfileBundle\Entity\UserProfileField;
 
@@ -42,9 +43,9 @@ class UserProfileValue
     /**
      * @var string
      *
-     * @ORM\Column(name="value", type="text")
+     * @ORM\Column(name="value", type="text", nullable=true)
      */
-    protected $value;
+    protected $value = null;
 
     /**
      * @var \DateTime
@@ -54,6 +55,28 @@ class UserProfileValue
      */
     protected $timeLastEdited;
 
+    public function __construct (
+        UserProfile $userProfile = null,
+        UserProfileField $userProfileField = null
+    ) {
+        if ($userProfile !== null) {
+            $this->setUserProfile($userProfile);
+        }
+        if ($userProfileField !== null) {
+            $this->setUserProfileField($userProfileField);
+        }
+    }
+
+    public function __toString()
+    {
+        switch ($this->userProfileField->getType()) {
+            case Bundle::FIELD_TYPE_BOOLEAN:
+                return ($this->value) ? 'Yes' : 'No';
+            case Bundle::FIELD_TYPE_TEXT:
+            case Bundle::FIELD_TYPE_SERIES:
+                return $this->value;
+        }
+    }
 
     /**
      * Get id

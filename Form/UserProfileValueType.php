@@ -6,6 +6,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+use CrisisTextLine\UserProfileBundle\Form\EventListener\UserProfileValueSubscriber;
+
 class UserProfileValueType extends AbstractType
 {
     /**
@@ -14,12 +16,8 @@ class UserProfileValueType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('value')
-            ->add('timeLastEdited')
-            ->add('userProfile')
-            ->add('userProfileField')
-        ;
+        $subscriber = new UserProfileValueSubscriber($builder->getFormFactory());
+        $builder->addEventSubscriber($subscriber);
     }
     
     /**

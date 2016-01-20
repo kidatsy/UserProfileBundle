@@ -32,23 +32,30 @@ class UserProfileField
     /**
      * @var string
      *
-     * @ORM\Column(name="read_access", type="string", length=255)
+     * @ORM\Column(name="default_value", type="text", nullable=true)
      */
-    protected $readAccess;
+    protected $defaultValue = null;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="write_access", type="string", length=255)
+     * @ORM\Column(name="read_access", type="string", length=255, nullable=true)
      */
-    protected $writeAccess;
+    protected $readAccess = null;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="write_access", type="string", length=255, nullable=true)
+     */
+    protected $writeAccess = null;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="type", type="integer")
+     * @ORM\Column(name="type", type="integer", options={"default" = 1})
      */
-    protected $type;
+    protected $type = 1;
 
     /**
      * @ORM\OneToMany(targetEntity="\CrisisTextLine\UserProfileBundle\Entity\UserProfileValue", mappedBy="userProfileField")
@@ -58,6 +65,11 @@ class UserProfileField
     public function __construct()
     {
         $this->values = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->name;
     }
 
     /**
@@ -91,6 +103,29 @@ class UserProfileField
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set defaultValue
+     *
+     * @param string $defaultValue
+     * @return UserProfileField
+     */
+    public function setDefaultValue($defaultValue)
+    {
+        $this->defaultValue = $defaultValue;
+
+        return $this;
+    }
+
+    /**
+     * Get defaultValue
+     *
+     * @return string 
+     */
+    public function getDefaultValue()
+    {
+        return $this->defaultValue;
     }
 
     /**
