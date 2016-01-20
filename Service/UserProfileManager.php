@@ -39,7 +39,7 @@ class UserProfileManager
             $this->em->flush();
         }
 
-        $this->attachMissingUserProfileValues($userProfile);
+        $userProfile = $this->attachMissingUserProfileValues($userProfile);
 
         return $userProfile;
     }
@@ -54,15 +54,17 @@ class UserProfileManager
             ->findAll();
 
         foreach ($fields as $field) {
-            if (!$userProfile->getValueForField($field)) {
+            if ($userProfile->getValueForField($field) == null) {
                 $value = new UserProfileValue($userProfile, $field);
                 $default = $field->getDefaultValue();
                 if ($default !== null) {
                     $value->setValue($default);
                 }
-                $this->em->persist($value);                
+                $this->em->persist($value);
             }
         }
         $this->em->flush();
+
+        return $userProfile;
     }
 }

@@ -189,9 +189,8 @@ class UserProfile
         foreach ($this->values as $value) {
             if ($value->getUserProfileField() == $field) {
                 return $value;
-            } else {
-                return false;
             }
         }
+        return null;
     }
 }

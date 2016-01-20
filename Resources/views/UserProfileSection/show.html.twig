@@ -1,7 +1,7 @@
 {% extends 'CrisisTextLineUserProfileBundle::base.html.twig' %}
 
 {% block userprofiles %}
-    <h1>UserProfileField</h1>
+    <h1>UserProfileSection</h1>
 
     <table class="record_properties">
         <tbody>
@@ -14,36 +14,28 @@
                 <td>{{ entity.name }}</td>
             </tr>
             <tr>
-                <th>Default Value</th>
-                <td>{{ entity.defaultValue }}</td>
+                <th>Description</th>
+                <td>{{ entity.description }}</td>
             </tr>
             <tr>
-                <th>Section</th>
-                <td>{{ entity.section }}</td>
+                <th>Weight</th>
+                <td>{{ entity.weight }}</td>
             </tr>
             <tr>
-                <th>Type</th>
-                <td>{{ entity.type }}</td>
-            </tr>
-            <tr>
-                <th>Readaccess</th>
-                <td>{{ entity.readAccess }}</td>
-            </tr>
-            <tr>
-                <th>Writeaccess</th>
-                <td>{{ entity.writeAccess }}</td>
+                <th>Accesslevel</th>
+                <td>{{ entity.accessLevel }}</td>
             </tr>
         </tbody>
     </table>
 
         <ul class="record_actions">
     <li>
-        <a href="{{ path('user_profile_field') }}">
+        <a href="{{ path('user_profile_section') }}">
             Back to the list
         </a>
     </li>
     <li>
-        <a href="{{ path('user_profile_field_edit', { 'id': entity.id }) }}">
+        <a href="{{ path('user_profile_section_edit', { 'id': entity.id }) }}">
             Edit
         </a>
     </li>

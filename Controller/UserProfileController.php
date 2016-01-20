@@ -19,7 +19,6 @@ use CrisisTextLine\UserProfileBundle\Form\UserProfileType;
  */
 class UserProfileController extends Controller
 {
-
     /**
      * Finds and displays a UserProfile entity.
      *
@@ -72,7 +71,7 @@ class UserProfileController extends Controller
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('user_profile_edit', array('id' => $entity->getUser()->getId())));
+            return $this->redirect($this->generateUrl('user_profile_show', array('id' => $entity->getUser()->getId())));
         }
 
         return array(
@@ -111,10 +110,13 @@ class UserProfileController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $profile = $em->getRepository('CrisisTextLineUserProfileBundle:UserProfile')->findByUserId($id);
+        $profileManager = $this->get('crisistextline.user_profile_manager');
 
-        if (!$profile) {
+        if ($profile) {
+            $profile = $profileManager->attachMissingUserProfileValues($profile);
+        } else {
             $user = $this->get('fos_user.user_manager')->findUserBy(array('id' => $id));
-            $profile = $this->get('crisistextline.user_profile_manager')->createUserProfile($user);
+            $profile = $profileManager->createUserProfile($user);
         }
 
         return $profile;

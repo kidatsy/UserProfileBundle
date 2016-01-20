@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class UserProfileFieldType extends AbstractType
+class UserProfileSectionType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -16,11 +16,9 @@ class UserProfileFieldType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('defaultValue')
-            ->add('section')
-            ->add('type')
-            ->add('readAccess')
-            ->add('writeAccess')
+            ->add('description')
+            ->add('weight')
+            ->add('accessLevel')
         ;
     }
     
@@ -30,7 +28,7 @@ class UserProfileFieldType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'CrisisTextLine\UserProfileBundle\Entity\UserProfileField'
+            'data_class' => 'CrisisTextLine\UserProfileBundle\Entity\UserProfileSection'
         ));
     }
 
@@ -39,6 +37,6 @@ class UserProfileFieldType extends AbstractType
      */
     public function getName()
     {
-        return 'crisistextline_userprofilebundle_userprofilefield';
+        return 'crisistextline_userprofilebundle_userprofilesection';
     }
 }

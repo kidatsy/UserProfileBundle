@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 use CrisisTextLine\UserProfileBundle\Entity\UserProfileValue;
+use CrisisTextLine\UserProfileBundle\Entity\UserProfileSection;
 
 /**
  * @ORM\Entity(repositoryClass="CrisisTextLine\UserProfileBundle\Entity\Repository\UserProfileFieldRepository")
@@ -37,6 +38,21 @@ class UserProfileField
     protected $defaultValue = null;
 
     /**
+     * @var integer
+     *
+     * @ORM\ManyToOne(targetEntity="\CrisisTextLine\UserProfileBundle\Entity\UserProfileSection", inversedBy="fields")
+     * @ORM\JoinColumn(name="user_profile_section_id", referencedColumnName="id")
+     */
+    protected $section;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="type", type="integer", options={"default" = 1})
+     */
+    protected $type = 1;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="read_access", type="string", length=255, nullable=true)
@@ -49,13 +65,6 @@ class UserProfileField
      * @ORM\Column(name="write_access", type="string", length=255, nullable=true)
      */
     protected $writeAccess = null;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="type", type="integer", options={"default" = 1})
-     */
-    protected $type = 1;
 
     /**
      * @ORM\OneToMany(targetEntity="\CrisisTextLine\UserProfileBundle\Entity\UserProfileValue", mappedBy="userProfileField")
@@ -129,6 +138,52 @@ class UserProfileField
     }
 
     /**
+     * Set section
+     *
+     * @param string $section
+     * @return UserProfileField
+     */
+    public function setSection(UserProfileSection $section)
+    {
+        $this->section = $section;
+
+        return $this;
+    }
+
+    /**
+     * Get section
+     *
+     * @return string 
+     */
+    public function getSection()
+    {
+        return $this->section;
+    }
+
+    /**
+     * Set type
+     *
+     * @param integer $type
+     * @return UserProfileField
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return integer 
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
      * Set readAccess
      *
      * @param string $readAccess
@@ -172,29 +227,6 @@ class UserProfileField
     public function getWriteAccess()
     {
         return $this->writeAccess;
-    }
-
-    /**
-     * Set type
-     *
-     * @param integer $type
-     * @return UserProfileField
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return integer 
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 
     /**
