@@ -1,6 +1,67 @@
 {% extends 'CrisisTextLineUserProfileBundle::base.html.twig' %}
 
 {% block userprofiles %}
+    <h1>User Profile Fields, by Section</h1>
+
+    <table class="records_list user-profile-section-list">
+        {% set totalCols = 5 %}
+        {% set insetCols = 2 %}
+        <thead>
+            <tr>
+                <th width="1"></th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Accesslevel</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td>
+                    <a href="{{ path('user_profile_section_up', { 'id': entity.id }) }}" class="no-underline">&#9650;</a><a href="{{ path('user_profile_section_down', { 'id': entity.id }) }}" class="no-underline">&#9660;</a>
+                </td>
+                <td><strong><a href="{{ path('user_profile_section_show', { 'id': entity.id }) }}">{{ entity.name }}</a></strong></td>
+                <td><strong>{{ entity.description }}</strong></td>
+                <td><strong>{{ entity.accessLevel }}</strong></td>
+                <td><strong>
+                <ul>
+                    <li>
+                        <a href="{{ path('user_profile_section_show', { 'id': entity.id }) }}">View</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('user_profile_section_edit', { 'id': entity.id }) }}">Edit</a>
+                    </li>
+                </ul>
+                </strong></td>
+            </tr>
+            <tr>
+                <td colspan="{{ insetCols }}"></td>
+                <td colspan="{{ totalCols - insetCols }}" style="padding:0;">
+                    {# // TC - fix this in CSS ^ #}
+                    {% include 'CrisisTextLineUserProfileBundle:includes:userProfileFieldList.html.twig' with {entities: entity.fields, fieldSortReturn: 'all'} %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('user_profile_section_new') }}">
+                Create a new Section
+            </a>
+        </li>
+    </ul>
+    {% endblock %}
+
+
+
+
+
+{# {% extends 'CrisisTextLineUserProfileBundle::base.html.twig' %}
+
+{% block userprofiles %}
     <h1>UserProfileField list</h1>
 
     <table class="records_list">
@@ -23,16 +84,16 @@
                 <td>{{ entity.name }}</td>
                 <td>{{ entity.defaultValue }}</td>
                 <td>{{ entity.section }}</td>
-                <td>{{ entity.type }}</td>
+                <td>{{ entity.humanReadableType }}</td>
                 <td>{{ entity.readAccess }}</td>
                 <td>{{ entity.writeAccess }}</td>
                 <td>
                 <ul>
                     <li>
-                        <a href="{{ path('user_profile_field_show', { 'id': entity.id }) }}">show</a>
+                        <a href="{{ path('user_profile_field_show', { 'id': entity.id }) }}">View</a>
                     </li>
                     <li>
-                        <a href="{{ path('user_profile_field_edit', { 'id': entity.id }) }}">edit</a>
+                        <a href="{{ path('user_profile_field_edit', { 'id': entity.id }) }}">Edit</a>
                     </li>
                 </ul>
                 </td>
@@ -49,3 +110,4 @@
         </li>
     </ul>
     {% endblock %}
+ #}

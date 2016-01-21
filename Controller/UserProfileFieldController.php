@@ -29,12 +29,13 @@ class UserProfileFieldController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('CrisisTextLineUserProfileBundle:UserProfileField')->findAll();
+        $entities = $em->getRepository('CrisisTextLineUserProfileBundle:UserProfileSection')->findAll();
 
         return array(
             'entities' => $entities,
         );
     }
+
     /**
      * Creates a new UserProfileField entity.
      *
@@ -169,6 +170,7 @@ class UserProfileFieldController extends Controller
 
         return $form;
     }
+
     /**
      * Edits an existing UserProfileField entity.
      *
@@ -193,7 +195,7 @@ class UserProfileFieldController extends Controller
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('user_profile_field_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('user_profile_field'));
         }
 
         return array(
@@ -202,6 +204,48 @@ class UserProfileFieldController extends Controller
             'delete_form' => $deleteForm->createView(),
         );
     }
+
+    /**
+     * Move a UserProfileField up
+     *
+     * @Route("/{id}/up", name="user_profile_field_up")
+     */
+    public function upAction($id, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('CrisisTextLineUserProfileBundle:UserProfileField')->find($id);
+
+        $entity->setWeight($entity->getWeight() - 1);
+        $em->persist($entity);
+        $em->flush();
+
+        return $this->redirect($this->getUpDownRedirectPath($request));
+    }
+    /**
+     * Move a UserProfileField down
+     *
+     * @Route("/{id}/down", name="user_profile_field_down")
+     */
+    public function downAction($id, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('CrisisTextLineUserProfileBundle:UserProfileField')->find($id);
+
+        $entity->setWeight($entity->getWeight() + 1);
+        $em->persist($entity);
+        $em->flush();
+
+        return $this->redirect($this->getUpDownRedirectPath($request));
+    }
+
+    private function getUpDownRedirectPath(Request $request)
+    {
+        $section = $request->get('section');
+        return (is_numeric($section))
+            ? $this->generateUrl('user_profile_section_show', array('id' => $section))
+            : $this->generateUrl('user_profile_field');
+    }
+
     /**
      * Deletes a UserProfileField entity.
      *

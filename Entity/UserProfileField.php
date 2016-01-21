@@ -3,8 +3,10 @@
 namespace CrisisTextLine\UserProfileBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 
+use CrisisTextLine\UserProfileBundle\CrisisTextLineUserProfileBundle as Bundle;
 use CrisisTextLine\UserProfileBundle\Entity\UserProfileValue;
 use CrisisTextLine\UserProfileBundle\Entity\UserProfileSection;
 
@@ -40,10 +42,19 @@ class UserProfileField
     /**
      * @var integer
      *
+     * @Gedmo\SortableGroup
      * @ORM\ManyToOne(targetEntity="\CrisisTextLine\UserProfileBundle\Entity\UserProfileSection", inversedBy="fields")
      * @ORM\JoinColumn(name="user_profile_section_id", referencedColumnName="id")
      */
     protected $section;
+
+    /**
+     * @var int
+     *
+     * @Gedmo\SortablePosition
+     * @ORM\Column(name="weight", type="integer", options={"default" = 0})
+     */
+    private $weight = 0;
 
     /**
      * @var integer
@@ -161,6 +172,29 @@ class UserProfileField
     }
 
     /**
+     * Set weight
+     *
+     * @param integer $weight
+     * @return UserProfileSection
+     */
+    public function setWeight($weight)
+    {
+        $this->weight = $weight;
+
+        return $this;
+    }
+
+    /**
+     * Get weight
+     *
+     * @return int
+     */
+    public function getWeight()
+    {
+        return $this->weight;
+    }
+
+    /**
      * Set type
      *
      * @param integer $type
@@ -260,5 +294,15 @@ class UserProfileField
     public function getValues()
     {
         return $this->values;
+    }
+
+    /**
+     * Get human-readable version of field type
+     *
+     * @return string 
+     */
+    public function getHumanReadableType()
+    {
+        return Bundle::getHumanReadableFieldTypes()[$this->type];
     }
 }

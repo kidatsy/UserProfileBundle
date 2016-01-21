@@ -19,7 +19,7 @@
             </tr>
             <tr>
                 <th>Section</th>
-                <td>{{ entity.section }}</td>
+                <td><a href="{{ path('user_profile_section_show', { 'id': entity.section.id }) }}">{{ entity.section }}</a></td>
             </tr>
             <tr>
                 <th>Type</th>

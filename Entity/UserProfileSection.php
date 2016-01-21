@@ -54,6 +54,7 @@ class UserProfileSection
 
     /**
      * @ORM\OneToMany(targetEntity="\CrisisTextLine\UserProfileBundle\Entity\UserProfileField", mappedBy="section")
+     * @ORM\OrderBy({"weight"="ASC"})
      */
     private $fields;
 

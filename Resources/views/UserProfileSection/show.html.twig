@@ -28,9 +28,14 @@
         </tbody>
     </table>
 
+    {% if entity.fields|length %}
+        <h2>Fields</h2>
+        {% include 'CrisisTextLineUserProfileBundle:includes:userProfileFieldList.html.twig' with {entities: entity.fields, fieldSortReturn: entity.id} %}
+    {% endif %}
+
         <ul class="record_actions">
     <li>
-        <a href="{{ path('user_profile_section') }}">
+        <a href="{{ path('user_profile_field') }}">
             Back to the list
         </a>
     </li>

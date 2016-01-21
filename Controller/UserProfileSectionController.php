@@ -17,24 +17,6 @@ use CrisisTextLine\UserProfileBundle\Form\UserProfileSectionType;
  */
 class UserProfileSectionController extends Controller
 {
-
-    /**
-     * Lists all UserProfileSection entities.
-     *
-     * @Route("/", name="user_profile_section")
-     * @Method("GET")
-     * @Template()
-     */
-    public function indexAction()
-    {
-        $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('CrisisTextLineUserProfileBundle:UserProfileSection')->findAll();
-
-        return array(
-            'entities' => $entities,
-        );
-    }
-
     /**
      * Creates a new UserProfileSection entity.
      *
@@ -182,7 +164,7 @@ class UserProfileSectionController extends Controller
         $em->persist($entity);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('user_profile_section'));
+        return $this->redirect($this->generateUrl('user_profile_field'));
     }
     /**
      * Move a UserProfileSection down
@@ -198,7 +180,7 @@ class UserProfileSectionController extends Controller
         $em->persist($entity);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('user_profile_section'));
+        return $this->redirect($this->generateUrl('user_profile_field'));
     }
 
     /**
@@ -224,7 +206,7 @@ class UserProfileSectionController extends Controller
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('user_profile_section_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('user_profile_field'));
         }
 
         return array(
@@ -257,7 +239,7 @@ class UserProfileSectionController extends Controller
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('user_profile_section'));
+        return $this->redirect($this->generateUrl('user_profile_field'));
     }
 
     /**
