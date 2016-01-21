@@ -71,7 +71,20 @@ doctrine:
             CrisisTextLine\UserProfileBundle\Model\UserProfileUserInterface: <YourBundle>\Entity\<YourUserEntity>
 ```
 
-Step 5: Add UserProfileUserTrait and UserProfileUserInterface to your User entity
+Step 5: Add User Role information to config.yml
+-----------------------------------------------
+
+Add information about any specific roles you would like the bundle to access for access control to Sections and Fields by adding the roles and human-friendly strings to `app/config/config.yml` like so:
+
+```yml
+crisis_text_line_user_profile:
+    roles_names:
+        - { role: "ROLE_USER", name: "User" }
+        - { role: "ROLE_SUPER_ADMIN", name: "Super Admin" }
+        # ...
+```
+
+Step 6: Add UserProfileUserTrait and UserProfileUserInterface to your User entity
 ---------------------------------------------------
 
 In your User class, add the following:
@@ -94,12 +107,12 @@ class User extends BaseUser implements UserProfileUserInterface
 }
 ```
 
-Step 6: Run a Migration (if need be)
+Step 7: Run a Migration (if need be)
 ------------------------------------
 
 If you're using the Doctrine Migrations bundle, make a new migration via `php app/console doctrine:migrations:diff` and run it. Otherwise, update your DB accordingly.
 
-Step 7: Override the templates
+Step 8: Override the templates
 ------------------------------
 
 If you'd like to override the base Twig template to fit into your own front-end environment, create a new `app/Resources/CrisisTextLineUserProfileBundle/views/base.html.twig` with the following:
@@ -116,7 +129,7 @@ You can override specific templates for each entity by putting replacements into
 - `app/Resources/CrisisTextLineUserProfileBundle/views/UserProfile`
 - `app/Resources/CrisisTextLineUserProfileBundle/views/UserProfileField`
 
-Step 8: Add the JS to your main template
+Step 9: Add the JS to your main template
 ----------------------------------------
 
 Add the following line(s) to the `<head>` of your app's main template:

@@ -2,11 +2,15 @@
 
 namespace CrisisTextLine\UserProfileBundle\Controller;
 
+use Doctrine\ORM\EntityManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+
 use CrisisTextLine\UserProfileBundle\Entity\UserProfileSection;
 use CrisisTextLine\UserProfileBundle\Form\UserProfileSectionType;
 
@@ -17,6 +21,15 @@ use CrisisTextLine\UserProfileBundle\Form\UserProfileSectionType;
  */
 class UserProfileSectionController extends Controller
 {
+    protected $container;
+    protected $em;
+
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+        $this->em = $this->getDoctrine()->getManager();
+    }
+
     /**
      * Creates a new UserProfileSection entity.
      *
@@ -31,9 +44,8 @@ class UserProfileSectionController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
+            $this->em->persist($entity);
+            $this->em->flush();
 
             return $this->redirect($this->generateUrl('user_profile_section_show', array('id' => $entity->getId())));
         }
@@ -90,8 +102,7 @@ class UserProfileSectionController extends Controller
      */
     public function showAction($id)
     {
-        $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('CrisisTextLineUserProfileBundle:UserProfileSection')->find($id);
+        $entity = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileSection')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find UserProfileSection entity.');
@@ -114,8 +125,7 @@ class UserProfileSectionController extends Controller
      */
     public function editAction($id)
     {
-        $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('CrisisTextLineUserProfileBundle:UserProfileSection')->find($id);
+        $entity = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileSection')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find UserProfileSection entity.');
@@ -157,12 +167,11 @@ class UserProfileSectionController extends Controller
      */
     public function upAction($id)
     {
-        $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('CrisisTextLineUserProfileBundle:UserProfileSection')->find($id);
+        $entity = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileSection')->find($id);
 
         $entity->setWeight($entity->getWeight() - 1);
-        $em->persist($entity);
-        $em->flush();
+        $this->em->persist($entity);
+        $this->em->flush();
 
         return $this->redirect($this->generateUrl('user_profile_field'));
     }
@@ -173,12 +182,11 @@ class UserProfileSectionController extends Controller
      */
     public function downAction($id)
     {
-        $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('CrisisTextLineUserProfileBundle:UserProfileSection')->find($id);
+        $entity = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileSection')->find($id);
 
         $entity->setWeight($entity->getWeight() + 1);
-        $em->persist($entity);
-        $em->flush();
+        $this->em->persist($entity);
+        $this->em->flush();
 
         return $this->redirect($this->generateUrl('user_profile_field'));
     }
@@ -192,8 +200,7 @@ class UserProfileSectionController extends Controller
      */
     public function updateAction(Request $request, $id)
     {
-        $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('CrisisTextLineUserProfileBundle:UserProfileSection')->find($id);
+        $entity = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileSection')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find UserProfileSection entity.');
@@ -204,7 +211,7 @@ class UserProfileSectionController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
-            $em->flush();
+            $this->em->flush();
 
             return $this->redirect($this->generateUrl('user_profile_field'));
         }
@@ -228,15 +235,14 @@ class UserProfileSectionController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('CrisisTextLineUserProfileBundle:UserProfileSection')->find($id);
+            $entity = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileSection')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find UserProfileSection entity.');
             }
 
-            $em->remove($entity);
-            $em->flush();
+            $this->em->remove($entity);
+            $this->em->flush();
         }
 
         return $this->redirect($this->generateUrl('user_profile_field'));

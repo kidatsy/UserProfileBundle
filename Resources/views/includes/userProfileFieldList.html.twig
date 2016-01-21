@@ -41,7 +41,7 @@
         {% endfor %}
         <tr>
             <td colspan="{{ 7 - (length > 1) }}">
-                Add a field
+                <a href="{{ path('user_profile_field_new', {'section': section}) }}">Add a field</a>
             </td>
         </tr>
     </tbody>

@@ -9,7 +9,7 @@
         <thead>
             <tr>
                 <th width="1"></th>
-                <th>Name</th>
+                <th>Section</th>
                 <th>Description</th>
                 <th>Accesslevel</th>
                 <th>Actions</th>
@@ -17,7 +17,7 @@
         </thead>
         <tbody>
         {% for entity in entities %}
-            <tr>
+            <tr style="background: #DDD;">
                 <td>
                     <a href="{{ path('user_profile_section_up', { 'id': entity.id }) }}" class="no-underline">&#9650;</a><a href="{{ path('user_profile_section_down', { 'id': entity.id }) }}" class="no-underline">&#9660;</a>
                 </td>
@@ -39,7 +39,7 @@
                 <td colspan="{{ insetCols }}"></td>
                 <td colspan="{{ totalCols - insetCols }}" style="padding:0;">
                     {# // TC - fix this in CSS ^ #}
-                    {% include 'CrisisTextLineUserProfileBundle:includes:userProfileFieldList.html.twig' with {entities: entity.fields, fieldSortReturn: 'all'} %}
+                    {% include 'CrisisTextLineUserProfileBundle:includes:userProfileFieldList.html.twig' with {entities: entity.fields, fieldSortReturn: 'all', section: entity.id} %}
                 </td>
             </tr>
         {% endfor %}

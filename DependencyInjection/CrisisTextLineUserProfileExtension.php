@@ -22,6 +22,11 @@ class CrisisTextLineUserProfileExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        foreach ($config['roles_names'] as $key => $param) {
+            $config['roles_names'][$key] = $param['name'];
+        }
+        $container->setParameter('crisistextline.roles_names', $config['roles_names']);
+
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
     }

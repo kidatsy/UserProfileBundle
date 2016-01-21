@@ -2,11 +2,15 @@
 
 namespace CrisisTextLine\UserProfileBundle\Controller;
 
+use Doctrine\ORM\EntityManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+
 use CrisisTextLine\UserProfileBundle\Entity\UserProfileField;
 use CrisisTextLine\UserProfileBundle\Form\UserProfileFieldType;
 
@@ -17,6 +21,16 @@ use CrisisTextLine\UserProfileBundle\Form\UserProfileFieldType;
  */
 class UserProfileFieldController extends Controller
 {
+    protected $container;
+    protected $em;
+    protected $roleNames;
+
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+        $this->em = $this->getDoctrine()->getManager();
+        $this->roleNames = $container->getParameter('crisistextline.roles_names');
+    }
 
     /**
      * Lists all UserProfileField entities.
@@ -27,9 +41,7 @@ class UserProfileFieldController extends Controller
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $entities = $em->getRepository('CrisisTextLineUserProfileBundle:UserProfileSection')->findAll();
+        $entities = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileSection')->findAll();
 
         return array(
             'entities' => $entities,
@@ -50,9 +62,8 @@ class UserProfileFieldController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
+            $this->em->persist($entity);
+            $this->em->flush();
 
             return $this->redirect($this->generateUrl('user_profile_field_show', array('id' => $entity->getId())));
         }
@@ -72,7 +83,7 @@ class UserProfileFieldController extends Controller
      */
     private function createCreateForm(UserProfileField $entity)
     {
-        $form = $this->createForm(new UserProfileFieldType(), $entity, array(
+        $form = $this->createForm(new UserProfileFieldType($this->roleNames), $entity, array(
             'action' => $this->generateUrl('user_profile_field_create'),
             'method' => 'POST',
         ));
@@ -89,10 +100,19 @@ class UserProfileFieldController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function newAction()
+    public function newAction(Request $request)
     {
         $entity = new UserProfileField();
-        $form   = $this->createCreateForm($entity);
+
+        $section = $request->get('section');
+        if ($section !== null) {
+            $section = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileSection')->find($section);
+            if ($section !== null) {
+                $entity->setSection($section);
+            }
+        }
+
+        $form = $this->createCreateForm($entity);
 
         return array(
             'entity' => $entity,
@@ -109,9 +129,7 @@ class UserProfileFieldController extends Controller
      */
     public function showAction($id)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('CrisisTextLineUserProfileBundle:UserProfileField')->find($id);
+        $entity = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileField')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find UserProfileField entity.');
@@ -134,9 +152,7 @@ class UserProfileFieldController extends Controller
      */
     public function editAction($id)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('CrisisTextLineUserProfileBundle:UserProfileField')->find($id);
+        $entity = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileField')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find UserProfileField entity.');
@@ -161,7 +177,7 @@ class UserProfileFieldController extends Controller
     */
     private function createEditForm(UserProfileField $entity)
     {
-        $form = $this->createForm(new UserProfileFieldType(), $entity, array(
+        $form = $this->createForm(new UserProfileFieldType($this->roleNames), $entity, array(
             'action' => $this->generateUrl('user_profile_field_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
@@ -180,9 +196,7 @@ class UserProfileFieldController extends Controller
      */
     public function updateAction(Request $request, $id)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('CrisisTextLineUserProfileBundle:UserProfileField')->find($id);
+        $entity = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileField')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find UserProfileField entity.');
@@ -193,7 +207,7 @@ class UserProfileFieldController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
-            $em->flush();
+            $this->em->flush();
 
             return $this->redirect($this->generateUrl('user_profile_field'));
         }
@@ -212,12 +226,11 @@ class UserProfileFieldController extends Controller
      */
     public function upAction($id, Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('CrisisTextLineUserProfileBundle:UserProfileField')->find($id);
+        $entity = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileField')->find($id);
 
         $entity->setWeight($entity->getWeight() - 1);
-        $em->persist($entity);
-        $em->flush();
+        $this->em->persist($entity);
+        $this->em->flush();
 
         return $this->redirect($this->getUpDownRedirectPath($request));
     }
@@ -228,12 +241,11 @@ class UserProfileFieldController extends Controller
      */
     public function downAction($id, Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('CrisisTextLineUserProfileBundle:UserProfileField')->find($id);
+        $entity = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileField')->find($id);
 
         $entity->setWeight($entity->getWeight() + 1);
-        $em->persist($entity);
-        $em->flush();
+        $this->em->persist($entity);
+        $this->em->flush();
 
         return $this->redirect($this->getUpDownRedirectPath($request));
     }
@@ -258,15 +270,14 @@ class UserProfileFieldController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('CrisisTextLineUserProfileBundle:UserProfileField')->find($id);
+            $entity = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileField')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find UserProfileField entity.');
             }
 
-            $em->remove($entity);
-            $em->flush();
+            $this->em->remove($entity);
+            $this->em->flush();
         }
 
         return $this->redirect($this->generateUrl('user_profile_field'));

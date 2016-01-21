@@ -20,6 +20,20 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('crisis_text_line_user_profile');
 
+        $rootNode
+            ->children()
+                ->arrayNode('roles_names')
+                    ->useAttributeAsKey('role')
+                    ->prototype('array')
+                        ->children()
+                            ->scalarNode('role')->end()
+                            ->scalarNode('name')->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
+
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for
         // more information on that topic.

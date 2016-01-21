@@ -30,7 +30,7 @@
 
     {% if entity.fields|length %}
         <h2>Fields</h2>
-        {% include 'CrisisTextLineUserProfileBundle:includes:userProfileFieldList.html.twig' with {entities: entity.fields, fieldSortReturn: entity.id} %}
+        {% include 'CrisisTextLineUserProfileBundle:includes:userProfileFieldList.html.twig' with {entities: entity.fields, fieldSortReturn: entity.id, section: entity.id} %}
     {% endif %}
 
         <ul class="record_actions">

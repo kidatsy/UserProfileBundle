@@ -2,11 +2,15 @@
 
 namespace CrisisTextLine\UserProfileBundle\Controller;
 
+use Doctrine\ORM\EntityManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+
 use CrisisTextLine\UserProfileBundle\Entity\UserProfile;
 
 /**
@@ -16,6 +20,14 @@ use CrisisTextLine\UserProfileBundle\Entity\UserProfile;
  */
 class UserProfileAdminController extends Controller
 {
+    protected $container;
+    protected $em;
+
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+        $this->em = $this->getDoctrine()->getManager();
+    }
 
     /**
      * Lists all UserProfile entities.
@@ -26,9 +38,7 @@ class UserProfileAdminController extends Controller
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $entities = $em->getRepository('CrisisTextLineUserProfileBundle:UserProfile')->findAll();
+        $entities = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfile')->findAll();
 
         return array(
             'entities' => $entities,
@@ -67,9 +77,8 @@ class UserProfileAdminController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
+            $this->em->persist($entity);
+            $this->em->flush();
 
             return $this->redirect($this->generateUrl('user_profile_show', array('id' => $entity->getUser()->getId())));
         }
