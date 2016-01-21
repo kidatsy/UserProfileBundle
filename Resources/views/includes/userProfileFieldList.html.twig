@@ -22,7 +22,7 @@
                 {% if length > 1 %}
                 <td><a href="{{ path('user_profile_field_up', {'id': entity.id , section: fieldSortReturn}) }}" class="no-underline">&#9650;</a><a href="{{ path('user_profile_field_down', {'id': entity.id , section: fieldSortReturn}) }}" class="no-underline">&#9660;</a></td>
                 {% endif %}
-                <td>{{ entity.name }}</td>
+                <td><a href="{{ path('user_profile_field_show', {'id': entity.id}) }}">{{ entity.name }}</td>
                 <td>{{ entity.defaultValue }}</td>
                 <td>{{ entity.humanReadableType }}</td>
                 <td>{{ entity.readAccess }}</td>
