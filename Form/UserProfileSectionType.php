@@ -8,6 +8,14 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class UserProfileSectionType extends AbstractType
 {
+
+    private $roleNames;
+
+    public function __construct($roleNames)
+    {
+        $this->roleNames = $roleNames;
+    }
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -17,8 +25,10 @@ class UserProfileSectionType extends AbstractType
         $builder
             ->add('name')
             ->add('description')
-            ->add('weight')
-            ->add('accessLevel')
+            ->add('accessLevel', 'choice', array(
+                'choices' => $this->roleNames,
+                'required' => false
+            ))
         ;
     }
     

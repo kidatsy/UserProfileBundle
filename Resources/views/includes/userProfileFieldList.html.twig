@@ -25,8 +25,8 @@
                 <td><a href="{{ path('user_profile_field_show', {'id': entity.id}) }}">{{ entity.name }}</td>
                 <td>{{ entity.defaultValue }}</td>
                 <td>{{ entity.humanReadableType }}</td>
-                <td>{{ entity.readAccess }}</td>
-                <td>{{ entity.writeAccess }}</td>
+                <td>{% if entity.readAccess is not null %}{{ role_names[entity.readAccess] }}{% endif %}</td>
+                <td>{% if entity.writeAccess is not null %}{{ role_names[entity.writeAccess] }}{% endif %}</td>
                 <td>
                     <ul>
                         <li>

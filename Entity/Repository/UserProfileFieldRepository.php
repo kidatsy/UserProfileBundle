@@ -23,4 +23,12 @@ class UserProfileFieldRepository extends SortableRepository
     {
         return $this->findBy(array());
     }
+
+    public function getHeaviestWeight()
+    {
+        $qb = $this->createQueryBuilder('f')
+                ->select('MAX(f.weight)');
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
 }

@@ -58,9 +58,10 @@ class UserProfileSection
      */
     private $fields;
 
-    public function __construct()
+    public function __construct($weight = 0)
     {
         $this->fields = new ArrayCollection();
+        $this->weight = $weight;
     }
 
     public function __toString()

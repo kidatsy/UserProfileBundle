@@ -23,11 +23,13 @@ class UserProfileSectionController extends Controller
 {
     protected $container;
     protected $em;
+    protected $roleNames;
 
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
         $this->em = $this->getDoctrine()->getManager();
+        $this->roleNames = $container->getParameter('crisistextline.roles_names');
     }
 
     /**
@@ -39,7 +41,7 @@ class UserProfileSectionController extends Controller
      */
     public function createAction(Request $request)
     {
-        $entity = new UserProfileSection();
+        $entity = $this->generateNewEntity();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
@@ -65,7 +67,7 @@ class UserProfileSectionController extends Controller
      */
     private function createCreateForm(UserProfileSection $entity)
     {
-        $form = $this->createForm(new UserProfileSectionType(), $entity, array(
+        $form = $this->createForm(new UserProfileSectionType($this->roleNames), $entity, array(
             'action' => $this->generateUrl('user_profile_section_create'),
             'method' => 'POST',
         ));
@@ -84,13 +86,22 @@ class UserProfileSectionController extends Controller
      */
     public function newAction()
     {
-        $entity = new UserProfileSection();
+        $entity = $this->generateNewEntity();
         $form   = $this->createCreateForm($entity);
 
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
         );
+    }
+
+    private function generateNewEntity()
+    {
+        $currentHeaviest = intval(
+            $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileSection')
+                ->getHeaviestWeight()
+        );
+        return new UserProfileSection($currentHeaviest + 1);
     }
 
     /**
@@ -113,6 +124,7 @@ class UserProfileSectionController extends Controller
         return array(
             'entity'      => $entity,
             'delete_form' => $deleteForm->createView(),
+            'role_names'  => $this->roleNames,
         );
     }
 
@@ -150,7 +162,7 @@ class UserProfileSectionController extends Controller
     */
     private function createEditForm(UserProfileSection $entity)
     {
-        $form = $this->createForm(new UserProfileSectionType(), $entity, array(
+        $form = $this->createForm(new UserProfileSectionType($this->roleNames), $entity, array(
             'action' => $this->generateUrl('user_profile_section_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));

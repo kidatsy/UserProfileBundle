@@ -45,6 +45,7 @@ class UserProfileFieldController extends Controller
 
         return array(
             'entities' => $entities,
+            'role_names'  => $this->roleNames,
         );
     }
 
@@ -57,7 +58,7 @@ class UserProfileFieldController extends Controller
      */
     public function createAction(Request $request)
     {
-        $entity = new UserProfileField();
+        $entity = $this->generateNewEntity();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
@@ -102,7 +103,7 @@ class UserProfileFieldController extends Controller
      */
     public function newAction(Request $request)
     {
-        $entity = new UserProfileField();
+        $entity = $this->generateNewEntity();
 
         $section = $request->get('section');
         if ($section !== null) {
@@ -118,6 +119,15 @@ class UserProfileFieldController extends Controller
             'entity' => $entity,
             'form'   => $form->createView(),
         );
+    }
+
+    private function generateNewEntity()
+    {
+        $currentHeaviest = intval(
+            $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileField')
+                ->getHeaviestWeight()
+        );
+        return new UserProfileField($currentHeaviest + 1);
     }
 
     /**
@@ -140,6 +150,7 @@ class UserProfileFieldController extends Controller
         return array(
             'entity'      => $entity,
             'delete_form' => $deleteForm->createView(),
+            'role_names'  => $this->roleNames,
         );
     }
 

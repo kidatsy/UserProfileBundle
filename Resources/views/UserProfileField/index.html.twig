@@ -23,7 +23,7 @@
                 </td>
                 <td><strong><a href="{{ path('user_profile_section_show', { 'id': entity.id }) }}">{{ entity.name }}</a></strong></td>
                 <td><strong>{{ entity.description }}</strong></td>
-                <td><strong>{{ entity.accessLevel }}</strong></td>
+                <td><strong>{% if entity.accessLevel is not null %}{{ role_names[entity.accessLevel] }}{% endif %}</strong></td>
                 <td><strong>
                 <ul>
                     <li>
@@ -39,7 +39,12 @@
                 <td colspan="{{ insetCols }}"></td>
                 <td colspan="{{ totalCols - insetCols }}" style="padding:0;">
                     {# // TC - fix this in CSS ^ #}
-                    {% include 'CrisisTextLineUserProfileBundle:includes:userProfileFieldList.html.twig' with {entities: entity.fields, fieldSortReturn: 'all', section: entity.id} %}
+                    {% include 'CrisisTextLineUserProfileBundle:includes:userProfileFieldList.html.twig' with {
+                        entities: entity.fields,
+                        fieldSortReturn: 'all',
+                        section: entity.id,
+                        role_names: role_names
+                    } %}
                 </td>
             </tr>
         {% endfor %}

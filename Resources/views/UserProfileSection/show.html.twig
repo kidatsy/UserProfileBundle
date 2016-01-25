@@ -6,10 +6,6 @@
     <table class="record_properties">
         <tbody>
             <tr>
-                <th>Id</th>
-                <td>{{ entity.id }}</td>
-            </tr>
-            <tr>
                 <th>Name</th>
                 <td>{{ entity.name }}</td>
             </tr>
@@ -18,19 +14,20 @@
                 <td>{{ entity.description }}</td>
             </tr>
             <tr>
-                <th>Weight</th>
-                <td>{{ entity.weight }}</td>
-            </tr>
-            <tr>
                 <th>Accesslevel</th>
-                <td>{{ entity.accessLevel }}</td>
+                <td>{% if entity.accessLevel is not null %}{{ role_names[entity.accessLevel] }}{% endif %}</td>
             </tr>
         </tbody>
     </table>
 
     {% if entity.fields|length %}
         <h2>Fields</h2>
-        {% include 'CrisisTextLineUserProfileBundle:includes:userProfileFieldList.html.twig' with {entities: entity.fields, fieldSortReturn: entity.id, section: entity.id} %}
+        {% include 'CrisisTextLineUserProfileBundle:includes:userProfileFieldList.html.twig' with {
+            entities: entity.fields,
+            fieldSortReturn: entity.id,
+            section: entity.id,
+            role_names: role_names
+        } %}
     {% endif %}
 
         <ul class="record_actions">

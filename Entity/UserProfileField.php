@@ -82,9 +82,10 @@ class UserProfileField
      */
     protected $values;
 
-    public function __construct()
+    public function __construct($weight = 0)
     {
         $this->values = new ArrayCollection();
+        $this->weight = $weight;
     }
 
     public function __toString()
