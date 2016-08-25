@@ -24,9 +24,13 @@ class UserProfileSectionType extends AbstractType
     {
         $builder
             ->add('name')
+            ->add('displayName')
             ->add('description')
             ->add('accessLevel', 'choice', array(
                 'choices' => $this->roleNames,
+                'required' => false
+            ))
+            ->add('enabled', null, array(
                 'required' => false
             ))
         ;

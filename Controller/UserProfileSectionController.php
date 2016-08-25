@@ -23,13 +23,15 @@ class UserProfileSectionController extends Controller
 {
     protected $container;
     protected $em;
+    protected $repo;
     protected $roleNames;
 
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
         $this->em = $this->getDoctrine()->getManager();
-        $this->roleNames = $container->getParameter('crisistextline.roles_names');
+        $this->repo = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileSection');
+        $this->roleNames = $container->getParameter('crisistextline.user_profile.roles_names');
     }
 
     /**
@@ -98,8 +100,7 @@ class UserProfileSectionController extends Controller
     private function generateNewEntity()
     {
         $currentHeaviest = intval(
-            $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileSection')
-                ->getHeaviestWeight()
+            $this->repo->getHeaviestWeight()
         );
         return new UserProfileSection($currentHeaviest + 1);
     }
@@ -113,7 +114,7 @@ class UserProfileSectionController extends Controller
      */
     public function showAction($id)
     {
-        $entity = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileSection')->find($id);
+        $entity = $this->repo->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find UserProfileSection entity.');
@@ -137,7 +138,7 @@ class UserProfileSectionController extends Controller
      */
     public function editAction($id)
     {
-        $entity = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileSection')->find($id);
+        $entity = $this->repo->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find UserProfileSection entity.');
@@ -179,7 +180,7 @@ class UserProfileSectionController extends Controller
      */
     public function upAction($id)
     {
-        $entity = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileSection')->find($id);
+        $entity = $this->repo->find($id);
 
         $entity->setWeight($entity->getWeight() - 1);
         $this->em->persist($entity);
@@ -194,7 +195,7 @@ class UserProfileSectionController extends Controller
      */
     public function downAction($id)
     {
-        $entity = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileSection')->find($id);
+        $entity = $this->repo->find($id);
 
         $entity->setWeight($entity->getWeight() + 1);
         $this->em->persist($entity);
@@ -212,7 +213,7 @@ class UserProfileSectionController extends Controller
      */
     public function updateAction(Request $request, $id)
     {
-        $entity = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileSection')->find($id);
+        $entity = $this->repo->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find UserProfileSection entity.');
@@ -247,7 +248,7 @@ class UserProfileSectionController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $entity = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileSection')->find($id);
+            $entity = $this->repo->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find UserProfileSection entity.');

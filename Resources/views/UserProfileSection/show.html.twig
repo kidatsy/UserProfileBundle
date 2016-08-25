@@ -1,4 +1,4 @@
-{% extends 'CrisisTextLineUserProfileBundle::base.html.twig' %}
+{% extends 'CrisisTextLineUserProfileBundle::adminBase.html.twig' %}
 
 {% block userprofiles %}
     <h1>UserProfileSection</h1>
@@ -10,11 +10,15 @@
                 <td>{{ entity.name }}</td>
             </tr>
             <tr>
+                <th>Display Name</th>
+                <td>{{ entity.displayName }}</td>
+            </tr>
+            <tr>
                 <th>Description</th>
                 <td>{{ entity.description }}</td>
             </tr>
             <tr>
-                <th>Accesslevel</th>
+                <th>Access Level</th>
                 <td>{% if entity.accessLevel is not null %}{{ role_names[entity.accessLevel] }}{% endif %}</td>
             </tr>
         </tbody>

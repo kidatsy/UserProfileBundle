@@ -7,7 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-use CrisisTextLine\UserProfileBundle\CrisisTextLineUserProfileBundle as Bundle;
+use CrisisTextLine\UserProfileBundle\CrisisTextLineUserProfileBundle;
 
 class UserProfileFieldType extends AbstractType
 {
@@ -26,13 +26,17 @@ class UserProfileFieldType extends AbstractType
     {
         $builder
             ->add('name')
+            ->add('displayName')
             ->add('defaultValue')
             ->add('section', null, array(
                 'required' => true
             ))
             ->add('type', 'choice', array(
-                'choices' => Bundle::getHumanReadableFieldTypes(),
+                'choices' => CrisisTextLineUserProfileBundle::getHumanReadableFieldTypes(),
                 'required' => true
+            ))
+            ->add('isList', null, array(
+                'required' => false
             ))
             ->add('readAccess', 'choice', array(
                 'choices' => $this->roleNames,
@@ -40,6 +44,9 @@ class UserProfileFieldType extends AbstractType
             ))
             ->add('writeAccess', 'choice', array(
                 'choices' => $this->roleNames,
+                'required' => false
+            ))
+            ->add('enabled', null, array(
                 'required' => false
             ))
         ;

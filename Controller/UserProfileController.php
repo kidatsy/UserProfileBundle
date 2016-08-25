@@ -24,23 +24,27 @@ class UserProfileController extends Controller
 {
     protected $container;
     protected $em;
+    protected $repo;
+    protected $profileManager;
 
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
         $this->em = $this->getDoctrine()->getManager();
+        $this->repo = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfile');
+        $this->profileManager = $this->container->get('crisistextline.service.user_profile_manager');
     }
 
     /**
      * Finds and displays a UserProfile entity.
      *
-     * @Route("/{id}/profile", name="user_profile_show")
+     * @Route("/{id}/profile", name="user_profile_show", options={"expose": true})
      * @Method("GET")
      * @Template()
      */
     public function showAction($id)
     {
-        $entity = $this->getOrCreateUserProfile($id);
+        $entity = $this->profileManager->findOrCreateByUserID($id);
 
         return array(
             'entity'      => $entity,
@@ -56,7 +60,7 @@ class UserProfileController extends Controller
      */
     public function editAction($id)
     {
-        $entity = $this->getOrCreateUserProfile($id);
+        $entity = $this->profileManager->findOrCreateByUserID($id);
         $editForm = $this->createEditForm($entity);
 
         return array(
@@ -74,7 +78,7 @@ class UserProfileController extends Controller
      */
     public function updateAction(Request $request, $id)
     {
-        $entity = $this->getOrCreateUserProfile($id);
+        $entity = $this->profileManager->findOrCreateByUserID($id);
 
         $editForm = $this->createEditForm($entity);
         $editForm->handleRequest($request);
@@ -108,28 +112,6 @@ class UserProfileController extends Controller
         $form->add('submit', 'submit', array('label' => 'Update'));
 
         return $form;
-    }
-
-    /**
-    * Gets or creates user profile, given user's ID
-    *
-    * @param integer $id ID
-    *
-    * @return UserProfile $profile
-    */
-    private function getOrCreateUserProfile($id)
-    {
-        $profile = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfile')->findByUserId($id);
-        $profileManager = $this->get('crisistextline.user_profile_manager');
-
-        if ($profile) {
-            $profile = $profileManager->attachMissingUserProfileValues($profile);
-        } else {
-            $user = $this->get('fos_user.user_manager')->findUserBy(array('id' => $id));
-            $profile = $profileManager->createUserProfile($user);
-        }
-
-        return $profile;
     }
 
     /**

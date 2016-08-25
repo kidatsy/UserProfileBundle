@@ -22,11 +22,13 @@ class UserProfileAdminController extends Controller
 {
     protected $container;
     protected $em;
+    protected $repo;
 
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
         $this->em = $this->getDoctrine()->getManager();
+        $this->repo = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfile');
     }
 
     /**
@@ -38,7 +40,7 @@ class UserProfileAdminController extends Controller
      */
     public function indexAction()
     {
-        $entities = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfile')->findAll();
+        $entities = $this->repo->findAll();
 
         return array(
             'entities' => $entities,
@@ -55,7 +57,7 @@ class UserProfileAdminController extends Controller
     public function newAction()
     {
         $entity = new UserProfile();
-        $form   = $this->createCreateForm($entity);
+        $form   = $this->createNewUserProfileForm($entity);
 
         return array(
             'entity' => $entity,
@@ -73,7 +75,7 @@ class UserProfileAdminController extends Controller
     public function createAction(Request $request)
     {
         $entity = new UserProfile();
-        $form = $this->createCreateForm($entity);
+        $form = $this->createNewUserProfileForm($entity);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -96,7 +98,7 @@ class UserProfileAdminController extends Controller
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createCreateForm(UserProfile $entity)
+    private function createNewUserProfileForm(UserProfile $entity)
     {
         $form = $this->createForm(new UserProfileType(), $entity, array(
             'action' => $this->generateUrl('user_profile_admin_create'),

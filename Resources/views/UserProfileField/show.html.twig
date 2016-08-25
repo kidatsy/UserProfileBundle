@@ -1,4 +1,4 @@
-{% extends 'CrisisTextLineUserProfileBundle::base.html.twig' %}
+{% extends 'CrisisTextLineUserProfileBundle::adminBase.html.twig' %}
 
 {% block userprofiles %}
     <h1>UserProfileField</h1>
@@ -8,6 +8,10 @@
             <tr>
                 <th>Name</th>
                 <td>{{ entity.name }}</td>
+            </tr>
+            <tr>
+                <th>Display Name</th>
+                <td>{{ entity.displayName }}</td>
             </tr>
             <tr>
                 <th>Default Value</th>
@@ -22,12 +26,20 @@
                 <td>{{ entity.humanReadableType }}</td>
             </tr>
             <tr>
+                <th>Data In List Form?</th>
+                <td>{% if entity.isList %}Yes{% else %}No{% endif %}</td>
+            </tr>
+            <tr>
                 <th>Readaccess</th>
                 <td>{% if entity.writeAccess is not null %}{{ role_names[entity.readAccess] }}{% endif %}</td>
             </tr>
             <tr>
                 <th>Writeaccess</th>
                 <td>{% if entity.writeAccess is not null %}{{ role_names[entity.writeAccess] }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Enabled</th>
+                <td>{% if entity.enabled %}Yes{% else %}No{% endif %}</td>
             </tr>
         </tbody>
     </table>

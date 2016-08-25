@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 
-use CrisisTextLine\UserProfileBundle\CrisisTextLineUserProfileBundle as Bundle;
+use CrisisTextLine\UserProfileBundle\CrisisTextLineUserProfileBundle;
 use CrisisTextLine\UserProfileBundle\Entity\UserProfileValue;
 use CrisisTextLine\UserProfileBundle\Entity\UserProfileSection;
 
@@ -35,6 +35,13 @@ class UserProfileField
     /**
      * @var string
      *
+     * @ORM\Column(name="display_name", type="string", length=255)
+     */
+    protected $displayName;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="default_value", type="text", nullable=true)
      */
     protected $defaultValue = null;
@@ -47,6 +54,13 @@ class UserProfileField
      * @ORM\JoinColumn(name="user_profile_section_id", referencedColumnName="id")
      */
     protected $section;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="enabled", type="boolean", options={"default" = true})
+     */
+    private $enabled = true;
 
     /**
      * @var int
@@ -62,6 +76,13 @@ class UserProfileField
      * @ORM\Column(name="type", type="integer", options={"default" = 1})
      */
     protected $type = 1;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_list", type="boolean", options={"default" = false})
+     */
+    private $isList = false;
 
     /**
      * @var string
@@ -82,10 +103,27 @@ class UserProfileField
      */
     protected $values;
 
-    public function __construct($weight = 0)
-    {
+    public function __construct(
+        $weight = 0,
+        $name = null,
+        $displayName = null,
+        $defaultValue = null,
+        $section = null,
+        $type = 1,
+        $readAccess = null,
+        $writeAccess = null,
+        $enabled = true
+    ) {
         $this->values = new ArrayCollection();
         $this->weight = $weight;
+        $this->name = $name;
+        $this->displayName = ($displayName == null) ? $name : $displayName;
+        $this->defaultValue = $defaultValue;
+        $this->section = $section;
+        $this->type = $type;
+        $this->readAccess = $readAccess;
+        $this->writeAccess = $writeAccess;
+        $this->enabled = $enabled;
     }
 
     public function __toString()
@@ -124,6 +162,29 @@ class UserProfileField
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set displayName
+     *
+     * @param string $displayName
+     * @return UserProfileField
+     */
+    public function setDisplayName($displayName)
+    {
+        $this->displayName = $displayName;
+
+        return $this;
+    }
+
+    /**
+     * Get displayName
+     *
+     * @return string
+     */
+    public function getDisplayName()
+    {
+        return $this->displayName;
     }
 
     /**
@@ -173,6 +234,29 @@ class UserProfileField
     }
 
     /**
+     * Set enabled
+     *
+     * @param boolean $enabled
+     * @return UserProfileSection
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+
+        return $this;
+    }
+
+    /**
+     * Get enabled
+     *
+     * @return boolean
+     */
+    public function getEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
      * Set weight
      *
      * @param integer $weight
@@ -216,6 +300,29 @@ class UserProfileField
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * Set isList
+     *
+     * @param boolean $isList
+     * @return UserProfileSection
+     */
+    public function setIsList($isList)
+    {
+        $this->isList = $isList;
+
+        return $this;
+    }
+
+    /**
+     * Get isList
+     *
+     * @return boolean
+     */
+    public function getIsList()
+    {
+        return $this->isList;
     }
 
     /**
@@ -304,6 +411,39 @@ class UserProfileField
      */
     public function getHumanReadableType()
     {
-        return Bundle::getHumanReadableFieldTypes()[$this->type];
+        return CrisisTextLineUserProfileBundle::getHumanReadableFieldTypes()[$this->type];
+    }
+
+    /**
+     * Boolean for if field holds series data
+     *
+     * @return string
+     */
+    public function isSeries()
+    {
+        return ($this->type == CrisisTextLineUserProfileBundle::FIELD_TYPE_SERIES);
+    }
+
+    /**
+     * Return array of profile field for representation as JSON object
+     *
+     * @return array
+     */
+    public function getPreJSON()
+    {
+        return array(
+            'id'            => $this->id,
+            'name'          => $this->name,
+            'displayName'   => $this->displayName,
+            'weight'        => $this->weight,
+            'defaultValue'  => $this->defaultValue,
+            'section_id'    => $this->section->getId(),
+            'type'          => $this->getHumanReadableType(),
+            'isSeries'      => $this->isSeries(),
+            'isList'        => $this->isList,
+            'readAccess'    => $this->readAccess,
+            'writeAccess'   => $this->writeAccess,
+            'enabled'       => $this->enabled,
+        );
     }
 }

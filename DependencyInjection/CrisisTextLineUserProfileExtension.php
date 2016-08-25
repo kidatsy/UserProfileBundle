@@ -25,7 +25,14 @@ class CrisisTextLineUserProfileExtension extends Extension
         foreach ($config['roles_names'] as $key => $param) {
             $config['roles_names'][$key] = $param['name'];
         }
-        $container->setParameter('crisistextline.roles_names', $config['roles_names']);
+        $container->setParameter('crisistextline.user_profile.roles_names', $config['roles_names']);
+        $container->setParameter('crisistextline.user_profile.test_admin_email', $config['test_admin_email']);
+
+        foreach ($config['services'] as $key => $service) {
+            $container->setParameter('crisistextline.user_profile.' . $key, $service);
+        }
+        $container->setParameter('crisistextline.user_profile.update_interval', $config['series_intervals']['update']);
+        $container->setParameter('crisistextline.user_profile.reporting_intervals', $config['series_intervals']['reporting']);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');

@@ -23,13 +23,17 @@ class UserProfileFieldController extends Controller
 {
     protected $container;
     protected $em;
+    protected $repoSection;
+    protected $repoField;
     protected $roleNames;
 
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
         $this->em = $this->getDoctrine()->getManager();
-        $this->roleNames = $container->getParameter('crisistextline.roles_names');
+        $this->repoSection = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileSection');
+        $this->repoField = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileField');
+        $this->roleNames = $container->getParameter('crisistextline.user_profile.roles_names');
     }
 
     /**
@@ -41,7 +45,7 @@ class UserProfileFieldController extends Controller
      */
     public function indexAction()
     {
-        $entities = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileSection')->findAll();
+        $entities = $this->repoSection->findAll();
 
         return array(
             'entities' => $entities,
@@ -107,7 +111,7 @@ class UserProfileFieldController extends Controller
 
         $section = $request->get('section');
         if ($section !== null) {
-            $section = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileSection')->find($section);
+            $section = $this->repoSection->find($section);
             if ($section !== null) {
                 $entity->setSection($section);
             }
@@ -124,8 +128,7 @@ class UserProfileFieldController extends Controller
     private function generateNewEntity()
     {
         $currentHeaviest = intval(
-            $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileField')
-                ->getHeaviestWeight()
+            $this->repoField->getHeaviestWeight()
         );
         return new UserProfileField($currentHeaviest + 1);
     }
@@ -139,7 +142,7 @@ class UserProfileFieldController extends Controller
      */
     public function showAction($id)
     {
-        $entity = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileField')->find($id);
+        $entity = $this->repoField->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find UserProfileField entity.');
@@ -163,7 +166,7 @@ class UserProfileFieldController extends Controller
      */
     public function editAction($id)
     {
-        $entity = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileField')->find($id);
+        $entity = $this->repoField->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find UserProfileField entity.');
@@ -207,7 +210,7 @@ class UserProfileFieldController extends Controller
      */
     public function updateAction(Request $request, $id)
     {
-        $entity = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileField')->find($id);
+        $entity = $this->repoField->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find UserProfileField entity.');
@@ -237,7 +240,7 @@ class UserProfileFieldController extends Controller
      */
     public function upAction($id, Request $request)
     {
-        $entity = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileField')->find($id);
+        $entity = $this->repoField->find($id);
 
         $entity->setWeight($entity->getWeight() - 1);
         $this->em->persist($entity);
@@ -252,7 +255,7 @@ class UserProfileFieldController extends Controller
      */
     public function downAction($id, Request $request)
     {
-        $entity = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileField')->find($id);
+        $entity = $this->repoField->find($id);
 
         $entity->setWeight($entity->getWeight() + 1);
         $this->em->persist($entity);
@@ -281,7 +284,7 @@ class UserProfileFieldController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $entity = $this->em->getRepository('CrisisTextLineUserProfileBundle:UserProfileField')->find($id);
+            $entity = $this->repoField->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find UserProfileField entity.');

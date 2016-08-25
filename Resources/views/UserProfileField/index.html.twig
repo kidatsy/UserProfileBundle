@@ -1,29 +1,33 @@
-{% extends 'CrisisTextLineUserProfileBundle::base.html.twig' %}
+{% extends 'CrisisTextLineUserProfileBundle::adminBase.html.twig' %}
 
 {% block userprofiles %}
     <h1>User Profile Fields, by Section</h1>
 
     <table class="records_list user-profile-section-list">
-        {% set totalCols = 5 %}
+        {% set totalCols = 7 %}
         {% set insetCols = 2 %}
         <thead>
             <tr>
                 <th width="1"></th>
                 <th>Section</th>
+                <th>Display Name</th>
                 <th>Description</th>
                 <th>Accesslevel</th>
+                <th>Enabled</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
         {% for entity in entities %}
-            <tr style="background: #DDD;">
+            <tr style="background: #DDD;" {% if not entity.enabled %}class="disabled"{% endif %}>
                 <td>
                     <a href="{{ path('user_profile_section_up', { 'id': entity.id }) }}" class="no-underline">&#9650;</a><a href="{{ path('user_profile_section_down', { 'id': entity.id }) }}" class="no-underline">&#9660;</a>
                 </td>
                 <td><strong><a href="{{ path('user_profile_section_show', { 'id': entity.id }) }}">{{ entity.name }}</a></strong></td>
+                <td><strong>{{ entity.displayName }}</strong></td>
                 <td><strong>{{ entity.description }}</strong></td>
                 <td><strong>{% if entity.accessLevel is not null %}{{ role_names[entity.accessLevel] }}{% endif %}</strong></td>
+                <td><strong>{% if entity.enabled %}Yes{% else %}No{% endif %}</strong></td>
                 <td><strong>
                 <ul>
                     <li>
@@ -59,60 +63,3 @@
         </li>
     </ul>
     {% endblock %}
-
-
-
-
-
-{# {% extends 'CrisisTextLineUserProfileBundle::base.html.twig' %}
-
-{% block userprofiles %}
-    <h1>UserProfileField list</h1>
-
-    <table class="records_list">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Default Value</th>
-                <th>Section</th>
-                <th>Type</th>
-                <th>Readaccess</th>
-                <th>Writeaccess</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for entity in entities %}
-            <tr>
-                <td><a href="{{ path('user_profile_field_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                <td>{{ entity.name }}</td>
-                <td>{{ entity.defaultValue }}</td>
-                <td>{{ entity.section }}</td>
-                <td>{{ entity.humanReadableType }}</td>
-                <td>{{ entity.readAccess }}</td>
-                <td>{{ entity.writeAccess }}</td>
-                <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('user_profile_field_show', { 'id': entity.id }) }}">View</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('user_profile_field_edit', { 'id': entity.id }) }}">Edit</a>
-                    </li>
-                </ul>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-        <ul>
-        <li>
-            <a href="{{ path('user_profile_field_new') }}">
-                Create a new entry
-            </a>
-        </li>
-    </ul>
-    {% endblock %}
- #}

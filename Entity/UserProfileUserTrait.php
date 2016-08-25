@@ -16,7 +16,7 @@ trait UserProfileUserTrait
      *
      * @var int
      *
-     * @ORM\OneToOne(targetEntity="\CrisisTextLine\UserProfileBundle\Entity\UserProfile", inversedBy="user")
+     * @ORM\OneToOne(targetEntity="\CrisisTextLine\UserProfileBundle\Entity\UserProfile", inversedBy="user", cascade={"persist"})
      * @ORM\JoinColumn(name="user_profile_id", referencedColumnName="id")
      */
     protected $userProfile;
@@ -36,10 +36,40 @@ trait UserProfileUserTrait
      *
      * @param UserProfile $userProfile
      */
-    public function setUserProfile(UserProfile $userProfile)
+    public function setUserProfile($userProfile)
     {
         $this->userProfile = $userProfile;
 
         return $this;
+    }
+
+    /**
+     * Return array of just profile data (minus user) for representation as JSON object
+     *
+     * @return array
+     */
+    public function getUserProfileDataArray()
+    {
+        if ($this->getUserProfile()) {
+            return $this->userProfile->getDataArray();
+        } else {
+            return array();
+        }
+    }
+
+    /**
+     * Return array of user for representation as JSON object
+     *
+     * @return array
+     */
+    public function getPreJSON()
+    {
+        $returnArray = array(
+            'id'                => $this->id,
+            'username'          => $this->username,
+            'email'             => $this->email,
+        );
+
+        return $returnArray;
     }
 }

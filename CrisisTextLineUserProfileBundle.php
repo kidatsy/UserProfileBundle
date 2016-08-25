@@ -11,6 +11,9 @@ class CrisisTextLineUserProfileBundle extends Bundle
     const FIELD_TYPE_STRING = 1;
     const FIELD_TYPE_SERIES = 2;
 
+    const GRAVATAR_BASE_URL = 'https://www.gravatar.com/avatar/';
+    const GRAVATAR_SIZE = 100;
+
     static public function getHumanReadableFieldTypes() {
         return array(
             self::FIELD_TYPE_BOOLEAN  => 'Boolean',

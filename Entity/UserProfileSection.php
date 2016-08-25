@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 
+use CrisisTextLine\UserProfileBundle\CrisisTextLineUserProfileBundle;
 use CrisisTextLine\UserProfileBundle\Entity\UserProfileField;
 
 /**
@@ -33,9 +34,23 @@ class UserProfileSection
     /**
      * @var string
      *
+     * @ORM\Column(name="display_name", type="string", length=255)
+     */
+    protected $displayName;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="description", type="string", length=255, nullable=true)
      */
     private $description;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="enabled", type="boolean", options={"default" = true})
+     */
+    private $enabled = true;
 
     /**
      * @var int
@@ -48,7 +63,7 @@ class UserProfileSection
     /**
      * @var string
      *
-     * @ORM\Column(name="accessLevel", type="string", length=255, nullable=true)
+     * @ORM\Column(name="access_level", type="string", length=255, nullable=true)
      */
     private $accessLevel;
 
@@ -58,10 +73,21 @@ class UserProfileSection
      */
     private $fields;
 
-    public function __construct($weight = 0)
-    {
+    public function __construct(
+        $weight = 0,
+        $name = null,
+        $displayName = null,
+        $description = null,
+        $accessLevel = null,
+        $enabled = true
+    ) {
         $this->fields = new ArrayCollection();
         $this->weight = $weight;
+        $this->name = $name;
+        $this->displayName = ($displayName == null) ? $name : $displayName;
+        $this->description = $description;
+        $this->accessLevel = $accessLevel;
+        $this->enabled = $enabled;
     }
 
     public function __toString()
@@ -103,6 +129,29 @@ class UserProfileSection
     }
 
     /**
+     * Set displayName
+     *
+     * @param string $displayName
+     * @return UserProfileSection
+     */
+    public function setDisplayName($displayName)
+    {
+        $this->displayName = $displayName;
+
+        return $this;
+    }
+
+    /**
+     * Get displayName
+     *
+     * @return string
+     */
+    public function getDisplayName()
+    {
+        return $this->displayName;
+    }
+
+    /**
      * Set description
      *
      * @param string $description
@@ -123,6 +172,29 @@ class UserProfileSection
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Set enabled
+     *
+     * @param boolean $enabled
+     * @return UserProfileSection
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+
+        return $this;
+    }
+
+    /**
+     * Get enabled
+     *
+     * @return boolean
+     */
+    public function getEnabled()
+    {
+        return $this->enabled;
     }
 
     /**
@@ -202,5 +274,33 @@ class UserProfileSection
     public function getFields()
     {
         return $this->fields;
+    }
+
+    /**
+     * Return array of profile section for representation as JSON object
+     *
+     * @return array
+     */
+    public function getPreJSON()
+    {
+        $fieldsToReturn = null;
+        $hasSeriesField = false;
+        foreach ($this->fields as $field) {
+            $fieldsToReturn[$field->getId()] = $field->getPreJSON();
+            if ($field->getType() == CrisisTextLineUserProfileBundle::FIELD_TYPE_SERIES) {
+                $hasSeriesField = true;
+            }
+        }
+        return array(
+            'id'            => $this->id,
+            'name'          => $this->name,
+            'displayName'   => $this->displayName,
+            'description'   => $this->description,
+            'weight'        => $this->weight,
+            'accessLevel'   => $this->accessLevel,
+            'enabled'       => $this->enabled,
+            'fields'        => $fieldsToReturn,
+            'hasSeriesField'=> $hasSeriesField,
+        );
     }
 }

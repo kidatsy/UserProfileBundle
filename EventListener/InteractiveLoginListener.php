@@ -9,6 +9,9 @@ use Doctrine\ORM\EntityManager;
 use CrisisTextLine\UserProfileBundle\Entity\UserProfile;
 use CrisisTextLine\UserProfileBundle\Service\UserProfileManager;
 
+/**
+ * service_id: crisistextline.event_listener.create_profile_on_login
+ */
 class InteractiveLoginListener
 {
     protected $em;
@@ -28,7 +31,7 @@ class InteractiveLoginListener
         $token = $event->getAuthenticationToken();
         $user = $token->getUser();
 
-        $userProfile = $this->userProfileManager->createUserProfile($user);
+        $userProfile = $this->userProfileManager->createUserProfileIfMissing($user);
     }
 
 }

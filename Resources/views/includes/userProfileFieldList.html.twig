@@ -8,25 +8,31 @@
             <th style="background-color: #DDD;" width="1"></th>
             {% endif %}
             <th style="background-color: #DDD;">Field</th>
+            <th style="background-color: #DDD;">Display Name</th>
             <th style="background-color: #DDD;">Default</th>
             <th style="background-color: #DDD;">Type</th>
+            <th style="background-color: #DDD;">List?</th>
             <th style="background-color: #DDD;">View</th>
             <th style="background-color: #DDD;">Edit</th>
+            <th style="background-color: #DDD;">Enabled</th>
             <th style="background-color: #DDD;">Actions</th>
         </tr>
     {% endif %}
     </thead>
     <tbody>
         {% for entity in entities %}
-            <tr>
+            <tr {% if not entity.enabled %}class="disabled"{% endif %}>
                 {% if length > 1 %}
                 <td><a href="{{ path('user_profile_field_up', {'id': entity.id , section: fieldSortReturn}) }}" class="no-underline">&#9650;</a><a href="{{ path('user_profile_field_down', {'id': entity.id , section: fieldSortReturn}) }}" class="no-underline">&#9660;</a></td>
                 {% endif %}
-                <td><a href="{{ path('user_profile_field_show', {'id': entity.id}) }}">{{ entity.name }}</td>
+                <td><a href="{{ path('user_profile_field_show', {'id': entity.id}) }}">{{ entity.name }}</a></td>
+                <td>{{ entity.displayName }}</td>
                 <td>{{ entity.defaultValue }}</td>
                 <td>{{ entity.humanReadableType }}</td>
+                <td>{% if entity.isList %}Yes{% else %}No{% endif %}</td>
                 <td>{% if entity.readAccess is not null %}{{ role_names[entity.readAccess] }}{% endif %}</td>
                 <td>{% if entity.writeAccess is not null %}{{ role_names[entity.writeAccess] }}{% endif %}</td>
+                <td>{% if entity.enabled %}Yes{% else %}No{% endif %}</td>
                 <td>
                     <ul>
                         <li>

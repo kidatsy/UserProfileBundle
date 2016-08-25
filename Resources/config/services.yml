@@ -1,12 +1,18 @@
 services:
-    crisistextline.user_profile_manager:
+    crisistextline.service.user_profile_manager:
         class: CrisisTextLine\UserProfileBundle\Service\UserProfileManager
         arguments:
             - "@doctrine.orm.entity_manager"
-    crisistextline.create_profile_on_login:
+            - "@fos_user.user_manager"
+            - "@security.role_hierarchy"
+    crisistextline.event_listener.create_profile_on_login:
         class: CrisisTextLine\UserProfileBundle\EventListener\InteractiveLoginListener
         arguments:
             - "@doctrine.orm.entity_manager"
-            - "@crisistextline.user_profile_manager"
+            - "@crisistextline.service.user_profile_manager"
         tags:
             - { name: kernel.event_listener, event: security.interactive_login, method: createProfileOnLogin, priority: -9999999 }
+    crisistextline.service.user_profile_test_helper:
+        class: CrisisTextLine\UserProfileBundle\Service\UserProfileTestHelper
+        arguments:
+            - "@doctrine.orm.entity_manager"

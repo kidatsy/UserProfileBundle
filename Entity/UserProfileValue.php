@@ -5,7 +5,7 @@ namespace CrisisTextLine\UserProfileBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
-use CrisisTextLine\UserProfileBundle\CrisisTextLineUserProfileBundle as Bundle;
+use CrisisTextLine\UserProfileBundle\CrisisTextLineUserProfileBundle;
 use CrisisTextLine\UserProfileBundle\Entity\UserProfile;
 use CrisisTextLine\UserProfileBundle\Entity\UserProfileField;
 
@@ -57,7 +57,8 @@ class UserProfileValue
 
     public function __construct (
         UserProfile $userProfile = null,
-        UserProfileField $userProfileField = null
+        UserProfileField $userProfileField = null,
+        $value = null
     ) {
         if ($userProfile !== null) {
             $this->setUserProfile($userProfile);
@@ -65,17 +66,16 @@ class UserProfileValue
         if ($userProfileField !== null) {
             $this->setUserProfileField($userProfileField);
         }
+        $this->value = $value;
     }
 
     public function __toString()
     {
-        switch ($this->userProfileField->getType()) {
-            case Bundle::FIELD_TYPE_BOOLEAN:
-                return ($this->value) ? 'Yes' : 'No';
-            case Bundle::FIELD_TYPE_TEXT:
-            case Bundle::FIELD_TYPE_SERIES:
-                return $this->value;
+        $return = $this->getValue();
+        if ($this->userProfileField->getType() == CrisisTextLineUserProfileBundle::FIELD_TYPE_BOOLEAN) {
+            $return = ($return) ? 'Yes' : 'No';
         }
+        return $return;
     }
 
     /**
@@ -142,7 +142,28 @@ class UserProfileValue
      */
     public function setValue($value)
     {
-        $this->value = $value;
+        switch ($this->userProfileField->getType()) {
+            case CrisisTextLineUserProfileBundle::FIELD_TYPE_BOOLEAN:
+                 if (is_string($value)) {
+                    switch($value) {
+                        case 'true':
+                            $value = 1;
+                            break;
+                        case 'false':
+                            $value = 0;
+                            break;
+                    }
+                }
+                if (is_int($value)) {
+                    $value = (bool) $value;
+                }
+                $this->value = ($value) ? '1' : '0';
+                break;
+            case CrisisTextLineUserProfileBundle::FIELD_TYPE_TEXT:
+            case CrisisTextLineUserProfileBundle::FIELD_TYPE_SERIES:
+            default:
+                $this->value = $value;
+        }
 
         return $this;
     }
@@ -154,7 +175,14 @@ class UserProfileValue
      */
     public function getValue()
     {
-        return $this->value;
+        switch ($this->userProfileField->getType()) {
+            case CrisisTextLineUserProfileBundle::FIELD_TYPE_BOOLEAN:
+                return ((int) $this->value) ? true : false;
+            case CrisisTextLineUserProfileBundle::FIELD_TYPE_TEXT:
+            case CrisisTextLineUserProfileBundle::FIELD_TYPE_SERIES:
+            default:
+                return $this->value;
+        }
     }
 
     /**
@@ -178,5 +206,21 @@ class UserProfileValue
     public function getTimeLastEdited()
     {
         return $this->timeLastEdited;
+    }
+
+    /**
+     * Return array of profile value for representation as JSON object
+     *
+     * @return array
+     */
+    public function getPreJSON()
+    {
+        return array(
+            'id'             => $this->id,
+            'profile'        => $this->userProfile->getId(),
+            'field_id'       => $this->userProfileField->getId(),
+            'value'          => $this->getValue(),
+            'timeLastEdited' => $this->timeLastEdited,
+        );
     }
 }
